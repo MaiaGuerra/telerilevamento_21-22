@@ -116,3 +116,17 @@ plotRGB(l2011, r=3, g=2, b=1, stretch="lin") # immagine a colori naturali
 plotRGB(l2011, r=3, g=4, b=2, stretch="hist") # immagine con infrarosso nel verde e stretch più marcato
 dev.off()
 
+# prendiamo l'immagine della stessa zona ma nel 1988
+
+l1988 <- brick("p224r63_1988.grd")
+l1988
+
+# costruiamo un multiframe per visualizzare la situazione della foresta del Parakana (Brasile) nel 1988 e poi nel 2011
+par(mfrow=c(2, 1)) # par è una funzione generale per la costruizione di grafici
+plotRGB(l1988, r=4, g=3, b=2, stretch="lin") # in entrambe le immagini l'infrarosso è nella banda del rosso
+plotRGB(l2011, r=4, g=3, b=2, stretch="lin") # si nota la differenza tra le due situazioni nell'estensione maggiore di strade e campi coltivati dall'88 al 2011
+# l'immagine sopra (1988) pare più sbiadita solo perchè il sensore usato era di tipologia diversa
+
+
+
+
