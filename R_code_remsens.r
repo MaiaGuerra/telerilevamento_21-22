@@ -69,3 +69,40 @@ clnir <- colorRampPalette(c("red", "orange", "yellow")) (100)
 plot(lan2011$B4_sre, col=clnir)
 
 
+# 24/03/2022
+
+library(raster)
+setwd("C:/lab/")
+
+l2011 <- brick("p224r63_2011.grd") # p = path, r = row, p224 = path 224 (percorso fatto dal satellite attorno alla Terra), r63 = riga 63 (incrociando riga e path (colonna) individuiamo l'immagine di riferimento)
+
+# plottare immagine l2011 nella banda dell'infrarosso vicino (NIR)
+
+l2011 # cerchiamo che nome ha la banda dell'infrarosso (è B4_sre (spectral reflectance))
+# B1 = blu
+# B2 = verde
+# B3 = rosso
+# B4 = infrarosso vicino (NIR)
+
+colnir <- colorRampPalette(c("red", "orange", "yellow")) (100)
+plot(l2011$B4_sre) # plotta la banda infrarossa ma con colori bruttini
+plot(l2011$B4_sre, col=colnir)
+
+# i pc e altri tipi di schermi moderni utilizzano il sistema RGB per riprodurre i colori
+
+
+plotRGB(l2011, r=3, g=2, b=1, stretch="lin") # plotta immagini satellitari fatte di vari layer, permette di plottare le bande che vogliamo
+# l'argomento stretch amplia i valori in modo che possiamo vedere i contrasti il più possibile
+# visualizziamo un'immagine detta "a colori naturali"
+# ha una parte in cui non sono stati registrati valori (parte simile a dendriti neri/blu scuro)
+
+plotRGB(l2011, r=4, g=3, b=2, stretch="lin") # per inserire la banda dell'infrarosso nell'immagine manteniamo la banda 2 e 3 e sostituiamo all'argomento r (banda del rosso) il numero 4 che definisce la banda dell'infrarosso vicino
+# attenzione a inserire i nuovi valori numerici (2, 3 e 4) facendo "scorrere" i numeri precedenti
+
+# spostiamo l'infrarosso dalla componente red alla green
+plotRGB(l2011, r=3, g=4, b=2, stretch="lin")
+# così facendo vediamo la banda dell'infrarosso colorata di verde
+
+
+
+
