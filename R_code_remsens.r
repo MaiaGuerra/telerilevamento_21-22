@@ -105,5 +105,14 @@ plotRGB(l2011, r=3, g=4, b=2, stretch="lin")
 
 plotRGB(l2011, r=3, g=2, b=4, stretch="lin") # plottando l'infrarosso nella banda del blu (si fa mettendo il 4 nell'oggetto b che è la banda del blu) si notano meglio le zone di suolo nudo (giallognole)
 
+plotRGB(l2011, r=3, g=4, b=2, stretch="hist") # specificando "hist" come stretch e mettendo l'infrarosso nel verde si notano meglio le zonazioni della foresta e le differenze nella vegetazione (viola = giallo di prima, ovvero suolo nudo)
+# come si sceglie dove mettere l'infrarosso? non c'è uno schema ideale, si sceglie quale delle combinazioni restituisce meglio i dettagli che ci servono
 
+# multiframe = insieme di più immagni
+# costruire multiframe con immagine a RGB visibile (linear stretch) sopra l'immagine a falsi colori (histigram stretch)
+
+par(mfrow=c(2, 1)) # mf = multiframe, row = ragiona per righe, prima 2 a definire che vogliamo due righe, poi 1 per definire che vogliamo una colonna
+plotRGB(l2011, r=3, g=2, b=1, stretch="lin") # immagine a colori naturali
+plotRGB(l2011, r=3, g=4, b=2, stretch="hist") # immagine con infrarosso nel verde e stretch più marcato
+dev.off()
 
