@@ -103,6 +103,7 @@ plotRGB(l2011, r=4, g=3, b=2, stretch="lin") # per inserire la banda dell'infrar
 plotRGB(l2011, r=3, g=4, b=2, stretch="lin")
 # così facendo vediamo la banda dell'infrarosso colorata di verde
 
+plotRGB(l2011, r=3, g=2, b=4, stretch="lin") # plottando l'infrarosso nella banda del blu (si fa mettendo il 4 nell'oggetto b che è la banda del blu) si notano meglio le zone di suolo nudo (giallognole)
 
 
 
