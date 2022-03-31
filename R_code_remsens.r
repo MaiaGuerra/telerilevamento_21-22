@@ -225,4 +225,18 @@ plot(ndvi1992, col=cl)
 plot(ndvi2006, col=cl)
 
 
+# Indici spettrali (si = spectral indices) automatici
+install.packages("rgdal")
+library(RStoolbox)
+
+si1992 <- spectralIndices(l1992, green=3, red=2, nir=1)
+plot(si1992, col=cl)
+# mostra tutti gli indici spettrali possibili calcolabili su quell'immagini
+# NDWI calcola l'ammontare di acqua rilevato per ogni pixel dell'immagine
+
+si2006 <- spectralIndices(l2006, green=3, red=2, nir=1)
+plot(si2006, col=cl)
+
+
+
 
