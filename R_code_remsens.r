@@ -229,14 +229,20 @@ plot(ndvi2006, col=cl)
 install.packages("rgdal")
 library(RStoolbox)
 
+# vediamo gli indici spettrali per l'immagine del 1992
 si1992 <- spectralIndices(l1992, green=3, red=2, nir=1)
 plot(si1992, col=cl)
-# mostra tutti gli indici spettrali possibili calcolabili su quell'immagini
+# mostra tutti gli indici spettrali possibili calcolabili su quell'immagine
 # NDWI calcola l'ammontare di acqua rilevato per ogni pixel dell'immagine
 
+# vediamo gli indici spettrali anche per quella del 2006
 si2006 <- spectralIndices(l2006, green=3, red=2, nir=1)
 plot(si2006, col=cl)
 
+install.packages("rasterdiv")
+library(rasterdiv)
 
+# immagine globale NDVI
+plot(copNDVI) # verde =NDVI più alto, giallo = NDVI più basso (valori della biomassa)
 
 
