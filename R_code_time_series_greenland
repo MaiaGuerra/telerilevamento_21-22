@@ -1,3 +1,43 @@
 # Analisi nel tempo dei dati LST della Groenlandia
+# dati dal satellite Copernicus
 
 library(raster)
+setwd("C:/lab/greenland")
+
+lst2000 <- raster("lst_2000.tif")
+lst2000
+# è un raster layer
+# 1 solo layer
+# 4428595 pixel
+# immagine a 16 bit (min = 0, max 2^16 = 65536)
+
+plot(lst2000)
+dev.off() # ho dovuto aggiungerlo perchè dava errore nella creazione del plot (forse c'erano altri plot caricati da prima)
+
+lst2005 <- raster("lst_2005.tif")
+lst2010 <- raster("lst_2010.tif")
+lst2015 <- raster("lst_2015.tif")
+
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+
+par(mfrow=c(2,2))
+plot(lst2000, col = cl)
+plot(lst2005, col = cl)
+plot(lst2010, col = cl)
+plot(lst2015, col = cl)
+
+
+# come importare tutto il set di file insieme
+rlist <- list.files(pattern="lst") # crea un vettore con i file partendo dal loro nome (vettore character)
+# il pattern dice alla funzione quali file importare attraverso i caratteri che sono uguali in ogni nome della serie di file da importare
+import <- lapply(rlist, raster)
+import
+
+tgr <- stack(import) # crea un Raster Stack, ovvero un insieme di Raster Brick
+tgr # fa la stessa cosa del brick ma con più layer che sono ognuno ogni file importato con lapply
+
+plot(tgr, col=cl) # in questo modo quando andiamo a plottare non c'è più bisogno di usare il multiframe perchè lo stack ha già ordinato i file
+
+plot(tgr$lst_2000, col=cl) # per estrarre un solo layer basta usare semplicemente il $
+
+plotRGB(tgr, r=1, g=2, b=3, stretch="lin") # stretch serve perchè nell'immagine che si crea non si possono vedere tutti i 65535 dati, perciò vengono "compressi" nel modo che scegliamo dallo stretch
