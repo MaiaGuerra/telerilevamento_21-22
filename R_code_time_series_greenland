@@ -43,3 +43,35 @@ plot(tgr, col=cl) # in questo modo quando andiamo a plottare non c'è più bisog
 plot(tgr$lst_2000, col=cl) # per estrarre un solo layer basta usare semplicemente il $
 
 plotRGB(tgr, r=1, g=2, b=3, stretch="lin") # stretch serve perchè nell'immagine che si crea non si possono vedere tutti i 65535 dati, perciò vengono "compressi" nel modo che scegliamo dallo stretch
+
+
+
+# 07/04/2022 NO2 DURANTE IL LOCKDOWN
+
+library(raster)
+setwd("C:/lab/EN")
+
+en01 <- raster("EN_0001.png")
+en01
+
+cl <- colorRampPalette(c('red','orange','yellow'))(100)
+
+plot(en01, col=cl) # situazione nube NO2 a gennaio 2020 (molto estesa)
+dev.off()
+
+en13 <- raster("EN_0013.png")
+en13
+
+plot(en13, col=cl) # situazione nube NO2 a marzo 2020 (inizio lockdown, nube già meno estesa)
+dev.off()
+
+# esercizio: importare tutto il set di immagini insieme
+
+ENlist <- list.files(pattern="EN") # crea la lista di file EN
+ENimport <- lapply(ENlist, raster) # applica la funzione raster a tutti gli oggetti della lista
+ENstack <- stack(ENimport) # crea il Raster Stack (insieme di Raster Brick)
+
+
+
+
+
