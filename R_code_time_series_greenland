@@ -56,13 +56,13 @@ en01
 
 cl <- colorRampPalette(c('red','orange','yellow'))(100)
 
-plot(en01, col=cl) # situazione nube NO2 a gennaio 2020 (molto estesa)
+plot(en01, col=cl) # situazione nube NO2 a gennaio 2020 (prima del lockdown, molto estesa)
 dev.off()
 
 en13 <- raster("EN_0013.png")
 en13
 
-plot(en13, col=cl) # situazione nube NO2 a marzo 2020 (inizio lockdown, nube già meno estesa)
+plot(en13, col=cl) # situazione nube NO2 a marzo 2020 (poco dopo inizio lockdown, nube già meno estesa)
 dev.off()
 
 # esercizio: importare tutto il set di immagini insieme
@@ -71,6 +71,28 @@ ENlist <- list.files(pattern="EN") # crea la lista di file EN
 ENimport <- lapply(ENlist, raster) # applica la funzione raster a tutti gli oggetti della lista
 ENstack <- stack(ENimport) # crea il Raster Stack (insieme di Raster Brick)
 
+plot(ENstack, col=cl) # plotta tutte le immagini dello stack
+
+# esercizio: plottare solo en01 (prima immagine di gennaio) accanto a en13 (ultima immagine di marzo)
+
+par(mfrow=c(1,2))
+plot(ENstack$EN_0001, col=cl)
+plot(ENstack$EN_0013, col=cl)
+dev.off()
+
+# oppure
+
+en01.13 <- stack(ENstack[[1]], ENstack[[13]])
+
+plot(en01.13, col=cl)
+dev.off()
+
+# vediamo la differenza tra la situazione a gennaio e quella a febbraio
+difEN <- ENstack[[1]] - ENstack[[13]]
+cldifEN <- colorRampPalette(c('blue','white','red'))(100) # gennaio appare come la zona in rosso e marzo la zona in blu
+
+plot(difEN, col=cldifEN)
+dev.off()
 
 
 
