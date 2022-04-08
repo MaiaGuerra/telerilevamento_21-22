@@ -95,5 +95,20 @@ plot(difEN, col=cldifEN)
 dev.off()
 
 
+# 08/04/2022
+
+library(raster)
+setwd("C:/lab/")
+source("R_inputcode.txt")
+
+rlist <- list.files(pattern="EN")
+ENimport <- lapply(rlist, raster)
+en <- stack(ENimport)
+
+cl <- colorRampPalette(c('red','orange','yellow'))(100)
+plot(en, col=cl)
+
+
+plotRGB(en, r=1, g=7, b=13, stretch="lin")
 
 
