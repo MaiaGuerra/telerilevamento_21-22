@@ -39,14 +39,12 @@ gc
 
 
 plotRGB(gc, r=1, g=2, b=3, stretch="lin")
-dev.off()
 # visualizziamo un'immagine molto simile a quella reale
 # di solito le bande sono r=3, g=2, b=3, ma essendo già elaborata perchè è un'immagine landsat,
 # si possono visualizzare anche come lo abbiamo impostato noi
 
 # cambiamo lo stretch per avere una colorazione più differenziata
 plotRGB(gc, r=1, g=2, b=3, stretch="hist")
-dev.off()
 
 # classificazione non supervisionata (Unsupervised Classification)
 # clustering di dati raster basato su k gruppi
@@ -55,8 +53,21 @@ gcclass2
 
 # visualizziamo la mappa creata con due classi
 plot(gcclass2$map)
-dev.off()
 
 # visualizziamo quella con quattro
 gcclass4 <- unsuperClass(gc, nClasses=4)
 plot(gcclass4$map)
+
+# plottiamo la mappa di 4 classi con una palette di colori diversa
+clc <- colorRampPalette(c('yellow','red','blue','black'))(100)
+plot(gcclass4$map, col=clc)
+dev.off()
+
+# compariamo la mappa classificata con l'immagine originale
+par(mfrow=c(2,1))
+plot(gcclass4$map, col=clc)
+plotRGB(gc, r=1, g=2, b=3, stretch="hist")
+
+
+
+
