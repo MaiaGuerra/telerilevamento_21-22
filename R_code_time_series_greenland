@@ -51,7 +51,7 @@ plotRGB(tgr, r=1, g=2, b=3, stretch="lin") # stretch serve perchè nell'immagine
 library(raster)
 setwd("C:/lab/EN")
 
-en01 <- raster("EN_0001.png")
+en01 <- raster("EN_0001.png") # EN = European Nitrogen
 en01
 
 cl <- colorRampPalette(c('red','orange','yellow'))(100)
