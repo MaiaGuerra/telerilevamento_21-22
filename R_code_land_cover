@@ -35,3 +35,39 @@ install.packages("ggplot2") # pacchetto per la creazione di grafici più elegant
 library(ggplot2)
 ggRGB(l92, 1, 2, 3, stretch="lin") # crea un grafico come plotRGB (gli argomenti infatti sono identici) ma più carino
 ggRGB(l06, 1, 2, 3, stretch="lin")
+
+# per unire le due immagini usiamo invece il pacchetto "patchwork"
+
+install.packages("patchwork") # permette di creare multiframes in modo più semplice rispetto a prima con la funzione "par"
+library(patchwork)
+
+p1 <- ggRGB(l92, 1, 2, 3, stretch="lin")
+p2 <- ggRGB(l06, 1, 2, 3, stretch="lin")
+
+p1+p2 # funziona come par ma semplicemente con + (visualizza p1 a fianco a p2)
+
+p1/p2 # (visualizza p1 sopra p2)
+
+# classifichiamo le immagini satellitari
+l92c <- unsuperClass(l92, nClasses = 2) # ci restituisce il modello creato sull'immagine
+l92c
+
+plot(l92c$map) # plottiamo la mappa del modello
+# in questo caso:
+# classe 1 = foresta
+# classe 2 = zone agricole/antropizzate e acqua
+# (possono essere anche invertiti da un pc a un altro a seconda di come la funzione ha assegnato i clori alle 2 classi)
+
+# costruiamo il modello e visualizziamo la mappa anche dell'altra immagine
+l06c <- unsuperClass(l06, nClasses = 2)
+plot(l06c$map)
+# anche in questa mappa i colori delle 2 classi sono gli stessi per i corrispettivi elementi
+
+# calcoliamo la frequenza dei pixel di entrambe le immagini per capire come variano negli anni
+freq(l92c$map) # calcola il numero di pixel per ogni classe
+# restituisce
+# 306449 pixel di classe 1 (foresta)
+# 34843 pixel di classe 2 (zone antropizzate e acqua)
+# dal modello di unsuperClass i pixel totali sono 341292 (infatti 34843 + 306449 = 341292)
+
+
