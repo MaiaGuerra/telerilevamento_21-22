@@ -1,0 +1,37 @@
+# 22/04/2022 LAND COVER (recuperata da registrazioni perchè stavo a San Casciano)
+
+# codice per generare mappe sulla copertura del suolo (land cover, naturale, antropizzata, ecc) da immagini satellitari
+
+library(raster)
+library(RStoolbox) # (per la classificazione)
+
+setwd("C:/lab/")
+
+# importazione immagine Landsat del Rio Peixoto in Brasile nel 1992 (già usata in una lezione precedente)
+
+l92 <- brick("defor1_.jpg") # l92 = immagine Landsat del 1992 
+l92
+
+plotRGB(l92, 1, 2, 3, stretch="lin") # abbiamo scritto 1, 2, 3 senza definire che siano r, g e b perchè di default la funzione li legge in modo corretto
+# la vegetazione riflette molto nel vicino infrarosso quindi sappiamo che nell'immagine il rosso è il NIR (Near InfraRed) e corrisponde alla copertura vegetale
+
+# importazione immagine Landsat del Rio Peixoto in Brasile nel 1992
+l06 <- brick("defor2_.jpg")
+
+# creazione del multiframe con le due immagini (con 2 righe e 1 colonna)
+par(mfrow=c(2,1))
+plotRGB(l92, 1, 2, 3, stretch="lin")
+plotRGB(l06, 1, 2, 3, stretch="lin")
+
+# i pixel dell'immagine vengono classificati campionandone una parte in modo casuale nel seguente modo:
+# immaginando un grafico con la banda del rosso su x e il NIR su y
+# i pixel rossi corrisponderanno ad alti valori di NIR e bassi di rosso (in alto a sx del grafico) -> vegetazione
+# i pixel blu/grigi a bassi valori di NIR e alti valori nel rosso (in basso a dx) -> aree agricole/antropizzate
+# tutti gli altri pixel che non rientrano nelle due categorie precedenti vengono associati in base alla distanza minima alla nuvola di pixel più vicina
+# (principio della maximum likelihood) -> per calibrare il modello iniziale
+
+
+install.packages("ggplot2") # pacchetto per la creazione di grafici più eleganti
+library(ggplot2)
+ggRGB(l92, 1, 2, 3, stretch="lin") # crea un grafico come plotRGB (gli argomenti infatti sono identici) ma più carino
+ggRGB(l06, 1, 2, 3, stretch="lin")
