@@ -80,7 +80,7 @@ freq(l06c$map) # calcola il numero di pixel per ogni classe dell'immagine del 20
 
 
 
-# 28/04/2022 SECONDA PARTE LAND COVER RIO PEIXOTO
+# 28/04/2022 SECONDA PARTE LAND COVER RIO PEIXOTO (recuperata da registrazioni perchè eravamo in escursione)
 
 library(raster)
 library(ggplot2)
