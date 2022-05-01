@@ -64,10 +64,68 @@ plot(l06c$map)
 # anche in questa mappa i colori delle 2 classi sono gli stessi per i corrispettivi elementi
 
 # calcoliamo la frequenza dei pixel di entrambe le immagini per capire come variano negli anni
-freq(l92c$map) # calcola il numero di pixel per ogni classe
+freq(l92c$map) # calcola il numero di pixel per ogni classe dell'immagine del 1992
 # restituisce
 # 306449 pixel di classe 1 (foresta)
 # 34843 pixel di classe 2 (zone antropizzate e acqua)
-# dal modello di unsuperClass i pixel totali sono 341292 (infatti 34843 + 306449 = 341292)
+# dal modello di unsuperClass i pixel totali per quest'immagine sono 341292 (infatti 34843 + 306449 = 341292)
+
+freq(l06c$map) # calcola il numero di pixel per ogni classe dell'immagine del 2006
+# restituisce
+# 178259 pixel di classe 1 (foresta)
+# 164467 pixel di classe 2 (zone antropizzate e acqua)
+# dal modello di unsuperClass i pixel totali per quest'immagine sono 342726 (infatti 178259 + 164467 = 342726)
+
+
+
+
+
+# 28/04/2022 GHIACCIAIO DEL SIMILAUN (recuperata perchè eravamo in escursione)
+
+# Analisi di pattern spaziali tramite l'uso di indici del paesaggio: il ghiacciaio del Similaun (dati Sentinel, 10m)
+# variabilità spaziale (eterogeneità e varianza) - usando indici di vegetazione e Principal Components
+
+library(raster)
+library(ggplot2)
+library(patchwork)
+library(RStoolbox)
+
+setwd("C:/lab/")
+
+l92 <- brick("defor1_.jpg") # carichiamo le due immagini (di 3 bande, NIR, rosso e verde) del Rio pixoto nel 1992 e nel 2006
+l06 <- brick("defor2_.jpg")
+
+ggRGB(l92, 1, 2, 3, stretch="lin")
+ggRGB(l06, 1, 2, 3, stretch="lin")
+
+# per vedere la differenza di copertura vegetale tra il 92 e il 2006 potremmo calcolare la proporzione di foresta presente 
+# nelle due immagini utilizzando il numero di pixel delle due classi (che distinguono la foresta dalle zone antropizzate)
+# e il numero totale di pixel presenti nelle due immagini satellitari
+
+l92 # dalle informazioni che ci da la funzione brick sulla prima immagine il numero totale di pixe è 341292
+tot92 <- 341292 # assegniamo il numero totale di pixel a una variabile
+prop_forest_92 <- 306449/tot92 # dalla divisione in classi la classe 1 (foresta) risultava di 306449 pixel
+# prop_forest_92 = 0.8979085
+perc_forest_92 <- prop_forest_92 * 100 # moltiplichiamo per 100 per avere la percentuale
+# perc_forest_92 = 89.79085
+prop_agr_92 <- 34843/tot92 # calcoliamo anche la proporzione di aree agricole nel 92
+# prop_agr_92 = 0.1020915 
+perc_agr_92 <- prop_agr_92 * 100 # a calcoliamo anche la percentuale
+# perc_agr_92 = 10.20915
+
+tot06 <- 342726 # dalle informazioni della funzione brik troviamo il totale dei pixel dell'immagine
+prop_forest_06 <- 178259/tot06 # calcoliamo quindi anche la percentuale di foresta nel 2006 sapendo quanti sono
+# i pixel della classe 1 (178259, dal modello creato da unsuperClass)
+# prop_forest_06 = 0.520121
+perc_forest_06 <- prop_forest_06 * 100 # calcoliamo la percentuale di foresta nel 2006
+# perc_forest_06 = 52.0121
+perc_agr_06 <- 100 - perc_forest_06 # e infine la percentuale di zone agricole/antropizzate nel 2006
+# perc_agr_06 = 47.9879
+
+
+
+
+
+
 
 
