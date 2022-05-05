@@ -1,0 +1,26 @@
+# 05/05/2022  ANALISI MULTIVARIATA
+
+
+library(raster)
+library(RStoolbox)
+
+setwd("C:/lab/")
+
+p224r63_2011 <- brick("p224r63_2011_masked.grd")
+
+plot(p224r63_2011)
+
+# RICAMPIONAMENTO: diminiuamo la risoluzione dell'immagine per rendere più veloce l'analisi multivariata attraverso la PCA
+# (Principal Component Analysis). Lo facciamo attraverso la funzione aggregate.
+# il tipodi ricampionamento ideale per le immagini satellite è quello bilineare. La funzione calcola le summary statistics dell'immagine
+# per poi scegliere il fattore per il quale raggruppare i pixel (es. fact=10, linearmente compatta 10 pixel in 1)
+
+p224r63_2011res <- aggregate(p224r63_2011, fact=10)
+
+library(ggplot2)
+library(patchwork)
+
+g1 <- ggRGB(p224r63_2011, 4, 3, 2)
+g2 <- ggRGB(p224r63_2011res, 4, 3, 2)
+
+g1 + g2
