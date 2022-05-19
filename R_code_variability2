@@ -1,0 +1,90 @@
+# 19/05/2022 VARIABILITA' Usando le principal component
+
+library(raster)
+library(RStoolbox)
+library(ggplot2)
+library(patchwork)
+library(viridis)
+
+setwd("C:/lab/")
+sen <- brick("sentinel_similaun.png")
+
+# NIR = banda 1
+# ROSSO = banda 2
+# VERDE = banda 3
+
+ggRGB(sen, r=1, g=2, b=3) # plottiamo l'immagine con l'infrarosso nella banda del rosso
+
+ggRGB(sen, 2, 1, 3)
+# per far uscire la vegetazione verde fluorescente si mette il NIR nella banda del verde (g)
+# ovvero nel posto centale delle 3 bande da indicare nella funzione ggRGB
+
+# per fare l'analisi multivariata dobbiamo estrarre una banda sola dall'immagine
+# per farlo usiamo la funzione rasterPCA (Principal Component Analysis for Rasters)
+
+sen_pca <- rasterPCA(sen)
+# i 3 gruppi restituiti dallla funzione sono simili a quelli della classificazione con "unsuperClass"
+# la $call è la funzione che abbiamo chiamato (rasterPCA)
+# $model è il modello che si utilizza per analizzare i pixel delle bande 
+# (modello di regressione, matrice con le correlazioni tra le bande)
+# $map è la mappa, la parte che ci interessa di più
+
+summary(sen_pca$model)
+# facendo un summary restituisce "Importance of components"
+# nella riga "proportion of Variance" è riportata la percentuale di quanto ogni componente spiega
+
+# in questo caso:
+# prima componente spiega 67.36804 %
+# seconda componente spiega 32.25753 %
+# tot: 99.62557 % che è pienamente sufficiente 
+
+plot(sen_pca$map) # plottando la mappa si vedono meglio tutte le 4 componenti e si può intuire
+# visivamente quanto ognuna di essa spiega il modello fatto sull'immagine
+# (es. la componente 3 e la 4 spiegano quasi nulla)
+
+pc1 <- sen_pca$map$PC1 # assegniamo ogni componente a un oggetto per velocizzare e semplificare 
+pc2 <- sen_pca$map$PC2
+pc3 <- sen_pca$map$PC3
+
+# visualizziamo la prima componente
+ggplot() + geom_raster(pc1, mapping=aes(x=x, y=y, fill=PC1)) # prima si apre la finestra vuota con ggplot
+# poi si definisce la geometria del grafico che mostra componente principale
+
+# grazie alla libreria patchwork plottiamo le prime 3 componenti una accanto all'altra
+g1 <- ggplot() +
+  geom_raster(pc1, mapping=aes(x=x, y=y, fill=PC1))
+
+g2 <- ggplot() +
+  geom_raster(pc2, mapping=aes(x=x, y=y, fill=PC2))
+
+g3 <- ggplot() +
+  geom_raster(pc3, mapping=aes(x=x, y=y, fill=PC3))
+
+g1 + g2 + g3
+
+# con la funzione focal calcoliamo la deviazione standard della PC1 (moving window 3x3)
+sd3 <- focal(pc1, matrix(1/9, 3, 3), fun=sd)
+# pc1 è la componente che analizza la funzione
+# la matrice è la moving window
+# fun=sd definisce che la funzione è la standard deviation
+sd3
+
+# mappiamo con ggplot la deviazione standard della prima componente coi colori del pacchetto viridis
+ggplot() +
+  geom_raster(sd3, mapping=aes(x=x, y=y, fill=layer)) +
+  scale_fill_viridis(option = "inferno")
+
+# plottiamo le immagini elaborate tutte insieme
+
+im1 <- ggRGB(sen, 2, 1, 3) # la prima è l'immagine originale
+
+im2 <- ggplot() +
+  geom_raster(pc1, mapping=aes(x=x, y=y, fill=PC1)) # la seconda è il calcolo della sd sulla pc1
+
+im3 <- ggplot() +
+  geom_raster(sd3, mapping=aes(x=x, y=y, fill=layer)) + # la terza è la visualizzazione della sd della pc1 con viridis
+  scale_fill_viridis(option = "inferno")
+
+im1 + im2 + im3
+
+
