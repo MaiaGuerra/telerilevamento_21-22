@@ -87,4 +87,21 @@ im3 <- ggplot() +
 
 im1 + im2 + im3
 
+# calcoliamo l'eterogeneità con una matrice 5x5
+sd5 <- focal(pc1, matrix(1/25, 5, 5), fun=sd)
 
+# plottiamo le due immagini analizzate con la moving window di dimensioni diverse (quella 3x3 accanto alla 5x5)
+im4 <- ggplot() +
+  geom_raster(sd5, mapping=aes(x=x, y=y, fill=layer)) +
+  scale_fill_viridis(option="inferno")
+
+im3 + im4
+
+# calcoliamo anche con una finestra 7x7
+sd7 <- focal(pc1, matrix(1/49, 7, 7), fun=sd)
+# plottiamo l'immagine relativa e confrontiamole tutte e 3
+im5 <- ggplot() +
+  geom_raster(sd7, mapping=aes(x=x, y=y, fill=layer)) +
+  scale_fill_viridis(option="inferno")
+
+im3 + im4 + im5
