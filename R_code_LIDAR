@@ -78,3 +78,13 @@ ggplot() +
 # cattura tutti i vari punti di ritorno del segnale nel momento in cui colpisce le superfici alle varie altezze
 # tramite algoritmi si estraggono DTM e DSM partendo dalla point cloud
 
+# carichiamo la opint cloud con la funzione readLAS (legge i file las/laz che sono il forato file delle point cloud)
+point_cloud <- readLAS("point_cloud.laz")
+plot(point_cloud)
+
+
+
+
+
+
+
