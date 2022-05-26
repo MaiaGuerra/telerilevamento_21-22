@@ -55,9 +55,12 @@ chm_2013
 
 plot(chm_2013)
 
-# per capire come è cambiata l'altezza degli alberi facciamo una sottrazione tra il CHM del 2013 e quello del 2004
+# per capire come è cambiata l'altezza degli alberi dal 2004 al 2013 facciamo una sottrazione tra il CHM del 2013 e quello del 2004
 # ma prima di farlo bisogna portare i 2 raster alla stessa risoluzione altrimenti R restituisce un errore
-# abbassiamo la risoluzione del raster del 2013 attraverso la funzione resample
+# (non riesce a calcolarla con 2 risoluzioni diverse)
+# la risoluzione dei modelli è ORIZZONTALE (ad es. 0,5x0,5 significa che ogni pixel dell'immagine corrisponde a un quadrato 0,5x0,5 m sul terreno)
+# ogni pixel contiene quindi i dati sull'altezza della zona sondata (che sia quella del terreno o della superficie totale)
+# per perdere meno dati abbassiamo la risoluzione del raster del 2013 allo stesso livello die quella del 2004, attraverso la funzione resample
 # resample ha i primi due argomenti x e y che sono: 
 # x = rater da ricampionare (in questo caso quello del 2013)
 # y = raster di riferimento secondo il quale ricampionare il primo (in questo caso quello del 2004)
@@ -80,6 +83,8 @@ ggplot() +
 
 # carichiamo la opint cloud con la funzione readLAS (legge i file las/laz che sono il forato file delle point cloud)
 point_cloud <- readLAS("point_cloud.laz")
+
+# visualizziamo il modello 3D della point cloud con un semplice plot
 plot(point_cloud)
 
 
