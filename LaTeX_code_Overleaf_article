@@ -1,0 +1,114 @@
+% 27/05/2022 primo codice di LaTex su Overleaf
+
+% su R i commenti sono fatti con #
+% e le funzioni con function()
+
+% su LaTeX i commenti sono fatti con %
+% e le funzioni con \function{}
+% graffe: alt gr + maiusc + tasto "è"
+
+% con ctrl + enter su Overleaf si compila, ovvero si aggiungono le modifiche scritte el codice al documento
+
+
+
+\documentclass[a4paper, 12pt]{article} % definisce il tipo di documento e dentro le parentesi quadre i parametri (es. foglio A4, grandezza carattere 12
+\usepackage[utf8]{inputenc} % è il pacchetto che useremo e un suo "vocabolario" (~ libreria) tra parentesi quadre
+\usepackage{graphicx} % pacchetto per parti grafiche
+\usepackage{color}
+\usepackage{hyperref} % per creare collegamenti ipertestuali
+\usepackage{lineno} % pacchetto per inserire i numeri di riga (utili per la revisione)
+\linenumbers % funzione per inserire numeri di riga
+\usepackage{listings}
+
+\newcommand{\tr}{\textcolor{green}} % per velocizzare alcuni comandi (come mettere il testo di un altro colore) si può velocizzare il tutto con \newcommand definendo una funzione in particolare e un nuovo nome (magari più breve) per chiamarla e usarla più velocemente
+% se poi si volessero togliere le parti cambiate di colore in una volta sola basta mettere il nuovo comando come commento e ricompilare (ctrl+enter)
+
+\title{My first document in LaTeX}
+\author{Maia Guerra}
+% \date{} se mettiamo la data come commento la compila automaticamente
+
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents % inserisce indice, va messa dopo \maketitle
+
+
+\section{Introduction}
+
+% per cambiare le dimensioni del carattere di una sezione, elemento o paragrafo, si usano funzioni per la dimensione dei caratteri (es. \tiny) inserendo il testo da cambiare in parentesi graffe
+
+% per cambiare il colore del testo si usa la funzione textcolor del pacchetto graphicx e si definiscono i colori dal pacchetto color
+Since the 1920s, \textcolor{green}{aerial photography} has represented an important data source for the detection of landscape patterns and their change over time.
+
+% anche per andare a capo si preme ctrl+enter dopo aver premuto enter
+% automaticamente Overleaf va a capo lasciando uno spazio dal margine detto indent
+% per toglierlo si scrive \noindent prima del paragrafo che mettiamo a capo
+% per separare un paragrafo dall'altro dopo essere andati a capo si può aggiungere \smallskip (piccola interlinea) o \bigskip (grande interlinea)
+
+Multitemporal analysis represents a powerful method for the study of all ecological and geological processes that change over time. The literature involves several fields of study: from soil loss to natural resources assessment to vegetation and ecological dynamics.
+
+
+
+\section{Study area}
+
+The study area is the nature reserve of Poggio all’Olmo in Tuscany (Figure \ref{Fig:Monte_Ventasso}), Italy (11 28 26E, 42 51 45N, WGS84 Datum). It is located on the side of Mt. Amiata,
+comprising 440 ha, with elevations ranging from 650 to 1016 m above mean sea level (m.s.l.) and slopes from 0 to 55.
+
+% inserimento immagine
+% prima si deve caricare nel progetto con il pulsante Upload in alto a sinistra su Overleaf
+% scrivendo begin{} con qualcosa di definito all'interno (es. figure, equation, ecc) si inizia qualcosa su Overleaf, che in automatico quando compiliamo viene chiuso da \end{} (con all'interno definito lo stesso argomento)
+% in mezzo alle parentesi di begin scriviamo "figure" perchè vogliamo inserire una figura, lo stesso verrà scritto in automatico quando compiliamo dentro \end{}
+% usiamo la funzione \includegraphics per dire al codice quale foto tra quelle caricate da inserire
+\begin{figure}
+    \centering % per centrare l'immagine
+    \includegraphics[width=0.3\textwidth]{_DSC2449.JPG} % inserisce l'immagine con una larghezza che definiamo rispetto al testo con \textwidth
+    \caption{A Picture of Mount Ventasso.} % inseriamo una didascalia
+    \label{Fig:Monte_Ventasso} % definiamo un'etichetta per richiamare l'immagine
+\end{figure}
+
+% mettendo \ref{Fig:Monte_Ventasso} dal pacchetto hyperref possiamo inserire l'indice dell'immagine e il collegamento ipertestuale a essa all'interno del testo
+
+
+
+\section{Methods}
+
+In this section I am going to describe the methods of this manuscript. First of all I will start with the formulas used and then I will pass to the code!
+
+
+\subsection{Formulas} % per aggiungere una sottosezione si usa questa funzione; in automatico le sottosezioni vengono poi inserite nell'indice
+
+Here is the formula used in this manuscript:
+
+% inserimento equazione
+\begin{equation}
+    F = \frac{\sqrt[3]{G \times \frac{m_{1} \times m_{2}}{d^{2}}}}{-\sum{p(x) \times \log{p(x)}}}
+    % \frac è la funzione per inserire una frazione in cui nelle prime due graffe c'è il numeratore, nelle seconde due il denominatore
+    % per mettere un pedice, si scrive "_{}" dopo la variabile e scrivendo l'argomento del pedice nelle graffe
+    % per mettere un apice si scrive "^{}" dopo la variabile con l'argomento dell'apice nelle graffe
+    % per mettere un "x" (moltiplicazione) nella formula scriviamo \times nel punto in cui vogliamo inserirlo nella formula
+    % per inserire una radice quadrata usiamo la funzione \sqrt{} con all'interno delle graffe l'argomento della radice
+    % per cambiare l'apice della radice mettiamo il suo valore numerico tra quadre prima dell'argomento (tra le graffe) della funzione
+    % per scrivere una sommatoria si usa \sum{}
+    \label{eq:newton}
+\end{equation}
+
+Let's put a formula directly in the main text. We can apply this: $F=G \times m_{​​​​​1}​​​​​$.
+% per inserire formule direttamente nel testo la scriviamo dentro a due simboli $$ (può dare messaggi di warning ma l'importante è che compili lo stesso)
+
+
+\subsection{Code}
+
+Here is the code used in this manuscript:
+% per inserire del codice (es. da R, python, ecc) col pacchetto "listings" caricato all'inizio, usiamo la funzione \lstinputlisting con il codice (precedentemente caricato con Upload su Overleaf) e definendo se vogliamo anche il linguaggio utilizzato tra le quadre (rpima delle graffe)
+\lstinputlisting[language = R]{R_code.r}
+
+
+\section{Results}
+
+As a result of this study I found that the Cadmium is present in the analyzed soil with a total amount of 15\%. These results were achieved according to Equation \ref{eq:newton}.
+
+\section{Discussion}
+
+\end{document}
