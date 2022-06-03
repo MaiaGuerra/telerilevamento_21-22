@@ -1,0 +1,72 @@
+\documentclass[]{beamer}
+\usepackage{listings}
+\usepackage{color}
+\usetheme{Berkeley} % definisce il tema della presentazione (design)
+\usecolortheme{spruce} % definisce il colore del tema 
+
+\title{My first presentation under beamer}
+\author[]{Maia Guerra}
+
+\begin{document}
+
+\maketitle
+% inseriamo un indice (outline) in una slide che ci indichi prima di ogni sezione a che punto della presetazione siamo con \AtBeginSection[]{}
+    \AtBeginSection[] % Do nothing for \section*
+    {	
+    \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection,currentsubsubsection]
+    \end{frame}
+    }
+
+
+\section{Introduction}
+
+\begin{frame}{My first slide} % con \begin{frame} creiamo la prima slide
+    \begin{itemize} % creiamo punti elenco con \begin{itemize} e mettiamo parole in grassetto con \textbf{}
+        \item Mars' surface is covered with \textbf{craters} that formed when comets and/or asteroids impacted the red planet.
+        \item \pause These craters are especially numerous in the \textbf{southern highlands} of Mars.
+% per aggiungere animazioni basta scrivere \pause prima del oggetto che deve apparire dopo
+    \end{itemize}   
+\end{frame}
+
+
+
+\section{Methods}
+
+\subsection{Instruments} % aggiungiamo delle sottosezioni alla sezione principale
+\begin{frame}{Instruments used}
+    \centering
+    \includegraphics[width=0.7\textwidth]{sonda_InSight.jpg}    
+    % nella funzione per introdurre l'immagine, dopo averla caricata su overleaf, definiamo le sue dimensioni dentro le quadre []
+\end{frame}
+
+\begin{frame}{Instruments used}
+    \centering
+    \includegraphics[width=0.7\textwidth]{sonda_Perseverance.jpg}
+\end{frame}
+
+\subsection{Analysis}
+\begin{frame}{The used formulas}
+    \centering
+    \includegraphics[width=0.3\textwidth]{Euler.jpg} \\ %i due backslash sono per andare a capo
+    
+    \begin{equation}
+        e^{i \pi} + 1 = 0
+    \end{equation}
+\end{frame}
+
+\section{Results}
+
+\begin{frame} \frametitle{Results}
+    \centering
+    \includegraphics[width=0.35\textwidth]{sonda_InSight.jpg}
+    \includegraphics[width=0.35\textwidth]{sonda_Perseverance.jpg}
+    \smallskip % per aggiungere un piccolo spazio tra le immagini
+    \includegraphics[width=0.35\textwidth]{sonda_InSight.jpg}
+    \includegraphics[width=0.35\textwidth]{sonda_Perseverance.jpg}
+\end{frame}
+
+
+
+\end{document}
