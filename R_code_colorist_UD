@@ -1,0 +1,69 @@
+# 03/06/2022 pacchetto Colorist per Utilization Distribution delle specie (RIGUARDARE REGISTRAZIONE 03/06 POMERIGGIO)
+
+install.packages("colorist")
+library(colorist)
+library(ggplot2)
+
+# colorist lavora solo con rasterstack (non con file brick o altre tipologie)
+
+
+data("fiespa_occ")
+fiespa_occ
+
+# per prima cosa si creano le metriche
+
+met1 <- metrics_pull(fiespa_occ)
+
+# poi la palette
+
+pal <- palette_timecycle(fiespa_occ)
+
+# crazione mappa multipla, che prenda metriche e palette, le divida in 3 colonne
+
+map_multiples(met1, pal, ncol=3, labels=names(fiespa_occ)) # restituisce una mappa per ogni mese
+# per estrarre un singolo mese
+map_single(met1, pal, layer = 6)
+
+# creazione altra palette personalizzata
+p1_custom <- palette_timecycle(12, start_hue = 60)
+
+# ricostruizione della mappa con la nuova palette
+map_multiples(met1, p1_custom, labels = names(fiespa_occ), ncol = 4)
+
+# creazione mappa "distillata" che mette insieme tutti i layer della mappa precedente
+met1_distill <- metrics_distill(fiespa_occ)
+
+map_single(met1_distill, pal)
+# parti della mappa più colorate con più alta specificità
+# viceversa parti più grigie
+# le specie che stiamo studiando sono presenti tendenzialmente tutto l'anno nelle zone grigie
+# le zone colorate sono specifiche solo per alcune determinate specie (per questo sono a più alta specificità)
+
+map_single(met1_distill,p1_custom) # stessa mappa con l'altra palette 
+
+legend_timecycle(pal, origin_label = "1 jan")
+
+# esempio con una specie di mammifero (Pekania pennati)
+
+data("fisher_ud") 
+
+# creazione metriche e palette
+m2 <- metrics_pull(fisher_ud)
+pal2 <- palette_timeline(fisher_ud)
+
+head(pal2)
+
+# mappa multipla
+
+map_multiples(m2, pal2, ncol = 3, lambda_i = -12)
+# si vede molto poco quando visualizziamo questa mappa, a causa di ciò che viene chiamato "fattore lambda"
+# lambda cambia il valore dell'opacità, che in questo caso è troppo bassa, perciò lo impostiamo al massimo
+
+# ora si distillano le informazioni dalla mappa creata
+# creazione metriche distillate
+m2_distill <- metrics_distill(fisher_ud)
+
+map_single(m2_distill, pal2, lambda_i = -10) # visualizza i movimenti dell'animale, ma senza riferimento
+
+legend_timeline(pal2, time_labels = c("2 aprile", "11 aprile"))
+
