@@ -1,0 +1,78 @@
+# 03/06/2022 Codice per lo Species Distribution Model (SDM)
+
+library(raster)
+library(sdm)
+library(rgdal)
+
+file <- system.file("external/species.shp", package="sdm") 
+species <- shapefile(file)
+
+species
+
+plot(species, pch=19) # ci mostra il grafico spaziale della presenza e dell'assenza della specie
+
+occ <- species$Occurrence # visualizza presenze e assenze della specie
+
+plot(species[occ == 1,], col="blue", pch=19) # plottiamo tutti i punti che abbiamo
+points(species[occ == 0,], col="red", pch=19) # evidenzia i punti in cui la specie era assente
+
+# per prevedere dove sarà la specie nello spazio dobbiamo creare un modello raster
+# usiamo i dati geografici come linguaggio statistico per prevedere la presenza della specie
+
+path <- system.file("external", package="sdm") # importiamo i predittori (variabili che aiutano a prevedere dove saranno le specie)
+lst <- list.files(path=path, patter='asc$', full.names=T) # facciamo una lista dei predictors
+
+preds <- stack(lst)
+cl <- colorRampPalette(c('blue','orange','red','yellow')) (100) # impostiamo la palette di colori dei grafici
+plot(preds, col=cl) # plottiamo i modelli di predizione della presenza di specie secondo le 4 variabili ambientali (predictors)
+
+# plot dei predictors con i punti della presenza della specie 
+elev <- preds$elevation
+prec <- preds$precipitation
+temp <- preds$temperature
+vege <- preds$vegetation
+
+# per ogni variabile ambientale (predictor) plottiamo la sua variabilità nella zona del rilevamento della specie 
+# assieme ai punti di presenza della specie
+plot(elev, col=cl)
+points(species[occ == 1,], pch=19)
+
+plot(temp, col=cl)
+points(species[occ == 1,], pch=19)
+
+plot(prec, col=cl)
+points(species[occ == 1,], pch=19)
+
+plot(vege, col=cl)
+points(species[occ == 1,], pch=19)
+
+
+# possiamo infine creare il modello di predizione della distribuzione della specie
+datasdm <- sdmData(train=species, predictors=preds) # carichiamo i dati del modello
+datasdm
+# 200 punti del tipo presenza/assenza in totale
+
+# modello lineare generalizzato y = α + βE + βT + βP + βV 
+# nel nostro modello lineare la y sono le Occurrence del modello datasdm che abbiamo creato
+# la x sono i predictors
+m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation, data=datasdm, methods="glm")
+
+# creiamo l'output del modello come raster layer con la funzione predict
+p1 <- predict(m1, newdata=preds)
+
+# poi plottiamo, visualizzando così la mappa della distribuzione della specie che tiene conto dei predictors (variabili ambientali)
+# e della presenza di specie
+plot(p1, col=cl)
+points(species[occ == 1,], pch=19)
+
+# possiamo plottare insieme il modello finale e i grafici di presenza della specie per ogni variabile con par
+par(mfrow=c(2,3))
+plot(p1, col=cl)
+plot(elev, col=cl)
+plot(prec, col=cl)
+plot(temp, col=cl)
+plot(vege, col=cl)
+
+# oppure aggiungere tutto allo stack per velocizzare il plottaggio 
+final <- stack(preds, p1)
+plot(final, col=cl)
