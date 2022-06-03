@@ -1,4 +1,5 @@
 # 03/06/2022 pacchetto Colorist per Utilization Distribution delle specie (RIGUARDARE REGISTRAZIONE 03/06 POMERIGGIO)
+# guarda codice su https://github.com/Ludovico-Chieffallo/Lessons
 
 install.packages("colorist")
 library(colorist)
