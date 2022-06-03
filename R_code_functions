@@ -1,0 +1,42 @@
+# 03/06/2022 Come costruire una funzione
+
+library(raster)
+setwd("C:/lab/")
+
+cheer_me <- function(your_name) {
+  
+  cheer_string <- paste("Hello", your_name, sep = " ")
+  print(cheer_string)
+  
+}   
+
+cheer_me("Maia")
+
+cheer_me_n_times <- function(your_name, n) {
+  cheer_string <- paste("Hello", your_name, sep = " ")
+  
+  for (i in 1:n) {
+    print(cheer_string)    
+  }
+}
+
+cheer_me_n_times("Mariangiongiangela", 6)
+cheer_me_n_times(n = 3, your_name = "Maia")
+
+dato <- raster("sentinel_similaun.png")
+plot(dato)
+
+plot_raster <- function(r, col = NA) {
+  if(!is.na(col)) {
+    pal <- colorRampPalette(col) (100)
+    plot(r, col = pal)
+  } else {
+    
+    plot(r)
+  }
+}
+
+plot_raster(dato, c("brown", "yellow", "green"))
+plot_raster(dato)
+
+
