@@ -25,8 +25,12 @@ lan2011
 # extent
 # crs (coordinate reference system): +proj=utm +zone=22 + datum=WGS84 +units=m +no_defs
 # source (sorgente): p224r63.grd
-# names: B1_sre, B2_sre, B3_sre, B4_sre, B5_sre, B6_sre, B7_sre (bande)
-# min values:
+# names: B1_sre, B2_sre, B3_sre, B4_sre, B5_sre, B6_sre, B7_sre (nomi delle bande, sre = spectral reflectance, bt = banda termica)
+## banda del blu = banda 1 = B1_sre
+## RIFLETTANZA = quanto flusso radiante entra / quanto flusso radiante viene riflesso
+## riflettanza = 0, tutta la radiazione viene assorbita, niente viene riflesso
+## riflettanza = 1, tutta la radiazione viene riflessa, niente viene assorbito
+# min values: sono sempre tutti 0 tranne banda del termico
 # max values:
 
 plot(lan2011) # plottiamo per costruire l'immagine dal dato .grd
