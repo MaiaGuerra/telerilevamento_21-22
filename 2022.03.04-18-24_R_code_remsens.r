@@ -34,6 +34,7 @@ plot(lan2011) # plottiamo per costruire l'immagine dal dato .grd
 cl <- colorRampPalette(c("black", "grey", "light grey")) (100) # con questa funzione definiamo una nuova palette di colori per la legenda delle immagini restituite dal plot e la assegniamo a un oggetto
 plot(lan2011, col=cl) # riplottiamo con la nuova palette di colori
 
+# 11.03.2022 ripasso su sistemi di riferimento
 
 # 18.03.2022
 
