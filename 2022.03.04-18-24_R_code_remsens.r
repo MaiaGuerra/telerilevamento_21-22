@@ -1,9 +1,20 @@
 # questo è il primo script che useremo a lezione (04.03.2022)
 
+# 10.03.2022
 library(raster)
 
 setwd("C:/lab/") # definiamo la cartella di lavoro
-lan2011 <- brick("p224r63_2011.grd") # assegniamo a un oggetto che decidiamo noi la funzione brick che crea un oggetto RaterBrick
+lan2011 <- brick("p224r63_2011.grd") # assegniamo a un oggetto che decidiamo noi la funzione brick che crea un oggetto RasterBrick
+# il nome dell'immagine indica il codice con cui si identificano le immagini landsat
+# Durante la sua orbita il satellite acquisisce immagini (NON foto!) attraverso dei sensori che fanno una sorta di scanner alla superficie terrestre.
+# Il satellite scannerizza seguendo i meridiani del pianeta (orbita circolare), e una volta riportati i percorsi (circolari) su una mappa, questi appaiono come delle
+# sinusoidi. Questi percorsi vengono chiamati "path", e vengono numerati. Essi sono ulteriormente divisi da righe orizzontali che seguono il senso dei paralleli,
+# dette "row".
+
+# Nel codice che identifica ogni immagine:
+# p = path, indica a quale dei cammini percorsi dal satellite appartiene l'immagine, identificato dal numero (es. p224)
+# r = row, indica quale riga identifica l'immagine all'interno del path già indicato (es. r63)
+
 lan2011
 plot(lan2011) # plottiamo per costruire l'immagine dal dato .grd
 
