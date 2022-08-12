@@ -30,6 +30,7 @@ lan2011
 ## RIFLETTANZA = quanto flusso radiante entra / quanto flusso radiante viene riflesso
 ## riflettanza = 0, tutta la radiazione viene assorbita, niente viene riflesso
 ## riflettanza = 1, tutta la radiazione viene riflessa, niente viene assorbito
+## non sempre i valori vanno da 0 a 1, a volte vanno anche da 0 a 255
 # min values: sono sempre tutti 0 tranne banda del termico
 # max values:
 
