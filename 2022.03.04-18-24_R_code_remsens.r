@@ -16,6 +16,19 @@ lan2011 <- brick("p224r63_2011.grd") # assegniamo a un oggetto che decidiamo noi
 # r = row, indica quale riga identifica l'immagine all'interno del path già indicato (es. r63)
 
 lan2011
+# analisi immagine landsat
+# classe (class): RasterBrick
+# dimensioni (dimensions): 1499, 2967, 4447533, 7 (nrow, ncol, ncell, nlayers)
+## ncell= n° di pixel (dati di riflettanza uno accanto all'altro)
+## nlayers = n° di layer (bande) -> ogni banda ha 4 milioni circa di pixel! -> 4x7 = 28, abbiamo circa 30 milioni di dati!
+# resolution (risoluzione): 30, 30 (x, y) indica a quanto corrisponde ogni immagine nella realtà (30m x 30m)
+# extent
+# crs (coordinate reference system): +proj=utm +zone=22 + datum=WGS84 +units=m +no_defs
+# source (sorgente): p224r63.grd
+# names: B1_sre, B2_sre, B3_sre, B4_sre, B5_sre, B6_sre, B7_sre (bande)
+# min values:
+# max values:
+
 plot(lan2011) # plottiamo per costruire l'immagine dal dato .grd
 
 cl <- colorRampPalette(c("black", "grey", "light grey")) (100) # con questa funzione definiamo una nuova palette di colori per la legenda delle immagini restituite dal plot e la assegniamo a un oggetto
