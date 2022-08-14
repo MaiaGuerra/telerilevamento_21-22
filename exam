@@ -1,0 +1,24 @@
+library(raster)
+library(RStoolbox)
+library(ggplot2)
+
+setwd("C:/EXAM/")
+
+lan1995 <- raster("images_1995/LT05_L2SP_038029_19950624_20200912_02_T1_SR_B1.tif")
+lan1995
+plot(lan1995)
+
+lan2015 <- raster("images_2015/LC08_L2SP_038029_20150122_20200910_02_T1_SR_B1.tif")
+lan2015
+plot(lan2015)
+
+lan2022 <- raster("images_2022/LC08_L2SP_038029_20220109_20220114_02_T1_SR_B1.tif")
+lan2022
+plot(lan2022)
+
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+
+par(mfrow=c(1,3))
+plot(lan1995, col = cl)
+plot(lan2015, col = cl)
+plot(lan2022, col = cl)
