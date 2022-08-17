@@ -1,24 +1,290 @@
+# Author: Maia Guerra
+
+# With this code I want to check the changes in land cover in the area of Yellowstone National Park (YNP) from 
+# wolf reintroduction on 12th January 1995 until now, 2022. To better check the situation of vegetation, the images
+# were selected for each year during the summer period, from the last half of July until the end of August.
+# This selection was also dued to the images quality, which sometimes had too high percentage of cloud cover and could
+# not be selected for the analysis of this work. With this code I will also perform a time series analysis starting from
+# 1995, checking the situation after 20 years in 2015, and finally the situation nowadays. 
+# I've obtained the images of Landsat 8-9 OLI/TIRS for images of 2015 and 2022, and Landsat 4-5 TM for images of 1995,
+# both from landsat 2 - collection 2 on USGS EarthExplorer website. The area I'm going to survey is the National Park 
+# itself, centered in north-west Wyoming, including a smaller surface of Montana on the north and Idaho on the west.
+
+
+##### 1 - LIBRARIES AND WORKING DIRECTORY #####
 library(raster)
 library(RStoolbox)
 library(ggplot2)
+library(patchwork)
+library(viridis)
 
 setwd("C:/EXAM/")
 
-lan1995 <- raster("images_1995/LT05_L2SP_038029_19950624_20200912_02_T1_SR_B1.tif")
-lan1995
+
+##### 2 - IMAGE IMPORT AND CREATION OF THE RASTERBRICKS #####
+
+
+### 2.1 - 1995 images ###
+
+# Raster brick for 1995 image: import of each band from 1 to 4 (B1=blue, B2=green, B3=red, B4=NIR) and creation of 
+# the raster brick.This images were taken on August 27th, 1995.
+
+l1995_B1 <- raster("images_1995/LT05_L2SP_038029_19950827_20200912_02_T1_SR_B1.tif") # B1
+l1995_B2 <- raster("images_1995/LT05_L2SP_038029_19950827_20200912_02_T1_SR_B2.tif") # B2
+l1995_B3 <- raster("images_1995/LT05_L2SP_038029_19950827_20200912_02_T1_SR_B3.tif") # B3
+l1995_B4 <- raster("images_1995/LT05_L2SP_038029_19950827_20200912_02_T1_SR_B4.tif") # B4
+
+# creation of the list to apply function stack.
+list1995 <- list(l1995_B1, l1995_B2, l1995_B3, l1995_B4)
+
+# Creation of the raster brick.
+lan1995 <- stack(list1995)
+lan1995 # check of the correct creation of the image.
 plot(lan1995)
 
-lan2015 <- raster("images_2015/LC08_L2SP_038029_20150122_20200910_02_T1_SR_B1.tif")
-lan2015
-plot(lan2015)
+# Plot of natural color image with plotRGB function.
+plotRGB(lan1995, 3, 2, 1, stretch="hist")
+# Numbers 3, 2, 1 in this order define r=3, g=2, b=1, so each colour is represented by the right band, giving the natural
+# aspect of the image. Argument stretch="hist" stretches the values to increase the contrast of the image and better 
+# notice the differences between vegetation, water, snow and bare soil.
 
-lan2022 <- raster("images_2022/LC08_L2SP_038029_20220109_20220114_02_T1_SR_B1.tif")
+# Plot of NIR (Near InfraRed) in the red band (B3).
+plotRGB(lan1995, 4, 3, 2, stretch="hist")
+
+
+### 2.2 - 2015 images ###
+
+# Creation of the raster brick from 2015 images.These ones were selected on August 2nd among all 2015 images because of the 
+# tidiness from fog, clouds or any other atmospheric obstacle. Landsat 8-9 captures images with red, green, blue and NIR bands
+# shifted of +1 number compared to Landsat 4-5, so here the bands are: B1=ultrablue, B2=blue, B3=green, B4=red, B5=NIR.
+# I didn't need B1 band for my analysis so I did not consider it in the building of the raster brick.
+# To have the same bands in raster bricks from 2015 and 2022 as in the one from 1995, I used bands 2, 3, 4 and 5, instead of 
+# 1, 2, 3, and 4 as before.
+l2015_B2 <- raster("images_2015/LC08_L2SP_038029_20150802_20200908_02_T1_SR_B2.tif") # B2
+l2015_B3 <- raster("images_2015/LC08_L2SP_038029_20150802_20200908_02_T1_SR_B3.tif") # B3
+l2015_B4 <- raster("images_2015/LC08_L2SP_038029_20150802_20200908_02_T1_SR_B4.tif") # B4
+l2015_B5 <- raster("images_2015/LC08_L2SP_038029_20150802_20200908_02_T1_SR_B5.tif") # B5
+list2015 <- list(l2015_B2, l2015_B3, l2015_B4, l2015_B5) # List of bands from 2015 to apply stack.
+
+# Creation of the raster brick for 2015 image.
+lan2015 <- stack(list2015)
+lan2015 # Check of correct creation of the image.
+
+# Plot of NIR in the red band.
+plotRGB(lan2015, 4, 3, 2, stretch="hist")
+
+
+### 2.3 - 2022 images ###
+
+# Creation of the raster brick from 2022 images. These were selected on 20th July for the same reason mentioned for 2015 images.
+# Here again the bands used are B2, B3, B4 and B5.
+l2022_B2 <- raster("images_2022/LC08_L2SP_038029_20220720_20220725_02_T1_SR_B2.tif") # B2
+l2022_B3 <- raster("images_2022/LC08_L2SP_038029_20220720_20220725_02_T1_SR_B3.tif") # B3
+l2022_B4 <- raster("images_2022/LC08_L2SP_038029_20220720_20220725_02_T1_SR_B4.tif") # B4
+l2022_B5 <- raster("images_2022/LC08_L2SP_038029_20220720_20220725_02_T1_SR_B5.tif") # B5
+list2022 <- list(l2022_B2, l2022_B3, l2022_B4, l2022_B5) # List of bands from 2022.
+
+# Creation of the raster brick for 2022 image.
+lan2022 <- stack(list2022)
 lan2022
-plot(lan2022)
 
-cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+#Plot of NIR in the red band.
+plotRGB(lan2022, 4, 3, 2, stretch="hist")
 
-par(mfrow=c(1,3))
-plot(lan1995, col = cl)
-plot(lan2015, col = cl)
-plot(lan2022, col = cl)
+
+
+##### 3 - CUTTING OF THE IMAGES FROM EACH YEAR IN THE SAME AREA #####
+
+
+# The area I am interested to analyse is much smaller than the full satellite image. To cut out only this area, I used
+# drawExtent function (from raster package) to select a square around it, using the cursor on the plot of the 1995 image.
+# The square has georeferenced coordinates at its vertexes, so it could be applied also to the other 2 images from 2015
+# and 2022. After this operation I've applied the cut on the 3 images using function crop and I've obtained 3 images 
+# centered on exactly the same area.
+
+# Creation of the square. Do not run this line while reproducing the code, because it requires the square to be redrawed.
+# I've saved the new created images later in the code to have them available for other analysis.
+# {
+redsquare <- drawExtent(show=T, col="red")
+# Cut of the first image (1995).
+lan1995sq <- crop(lan1995, redsquare) # In the object name "sq" is for "square".
+# Plot of the image to check the right cutting.
+plotRGB(lan1995sq, 4, 3, 2, stretch="hist")
+
+# Applying of the same cut to the remaining 2 images.
+lan2015sq <- crop(lan2015, redsquare)
+plotRGB(lan2015sq, 4, 3, 2, stretch="hist")
+lan2022sq <- crop(lan2022, redsquare)
+plotRGB(lan2022sq, 4, 3, 2, stretch="hist")
+
+# Saving all the new images as .jpg for the next analyses. Exporting in this format (.jpg) saves only the first 3 bands
+# of each image, so I saved plots with NIR in the red band and red in the green band to be able to use them in the next
+# analyses.
+## 2015
+jpeg("lan2015area.jpg")
+plotRGB(lan2015sq, 4, 3, 2, stretch="hist")
+dev.off()
+
+## 2022
+jpeg("lan2022area.jpg")
+plotRGB(lan2022sq, 4, 3, 2, stretch="hist")
+dev.off()
+# }
+
+# After cutting all the images centered on the study area, I realized that the cover of clouds in 1995 image caused the loss
+# of too much data on the type of land cover at the bottom half of the image. To fix this problem, I've searched USGS website 
+# for other images from 1995, caught in the same period of the year, and having less cloud cover in the bottom area of the image.
+# The only other good image of the same area without cloud cover I could find was from 26th July, quite a month before the 1995
+# image I used at first, from 27th August. Unfortunately, this image had some clouds covering too, but at the top half part of it.
+# So, to have an image as clear as possible from 1995, I decided to cut from the 2 images only the portions without cloud cover
+# and then put them together using the code.
+
+# Import of the second image from 26th July 1995.
+l1995_2_B1 <- raster("images_1995/LT05_L2SP_038029_19950726_20200912_02_T1_SR_B1.tif")
+l1995_2_B2 <- raster("images_1995/LT05_L2SP_038029_19950726_20200912_02_T1_SR_B2.tif")
+l1995_2_B3 <- raster("images_1995/LT05_L2SP_038029_19950726_20200912_02_T1_SR_B3.tif")
+l1995_2_B4 <- raster("images_1995/LT05_L2SP_038029_19950726_20200912_02_T1_SR_B4.tif")
+list1995_2 <- list(l1995_2_B1, l1995_2_B2, l1995_2_B3, l1995_2_B4)
+lan1995_2 <- stack(list1995_2)
+lan1995_2
+
+# Do not run this part of the code because of the same reason mentioned before for the cutting of the images.
+# {
+lan1995_2sq <- crop(lan1995_2, redsquare)
+plotRGB(lan1995_2sq, 4, 3, 2, stretch="hist")
+
+# Creation of two rectangles to select the portion of the image that I needed in each satellite image from 1995. Again, do not
+# run this lines because rectangles would have to be draw again. I saved the images at the end of this part of the code
+# to use them later.
+bluesquare <- drawExtent(show = T, col="blue")
+greensquare <- drawExtent(show = T, col="green")
+lan1995_2bluesq <- crop(lan1995_2, bluesquare)
+lan1995greensq <- crop(lan1995, greensquare)
+
+# Plot of the 2 rectangles to check the right creation of the 2 pieces of the image.
+plotRGB(lan1995_2bluesq, 4, 3, 2, stretch="hist")
+plotRGB(lan1995greensq, 4, 3, 2, stretch="hist")
+# Joining of the two pieces using merge function from raster package, which uses georeferentiation to unify correctly the
+# pieces in the right place and create a new raster. 
+lan1995fin <- merge(lan1995greensq, lan1995_2bluesq, tolerance=0.05, filename="", ext=NULL)
+plotRGB(lan1995fin, 4, 3, 2, stretch="hist")
+
+# Saving the new 1995 image.
+jpeg("lan1995area.jpg")
+plotRGB(lan1995fin, 4, 3, 2, stretch="hist")
+dev.off()
+# }
+
+# Import of the new images created after the cutting. Here I can plot the images using numbers 1, 2, and 3 because the first band
+# is the NIR (the image was previously saved as this): NIR=1, red=2, green=3.
+## 1995
+lan1995area <- brick("lan1995area.jpg")
+plotRGB(lan1995area, 1, 2, 3, stretch="hist")
+
+## 2015
+lan2015area <- brick("lan2015area.jpg")
+plotRGB(lan2015area, 1, 2, 3, stretch="hist")
+
+## 2022
+lan2022area <- brick("lan2022area.jpg")
+plotRGB(lan2022area, 1, 2, 3, stretch="hist")
+
+
+
+##### 4 - TIME SERIES ANALYSIS #####
+
+
+# Creation of some graphics to compare the images using ggplot2 package functions.
+# Here the plot bands are 1, 2 and 3 because the jpg were saved with the NIR plotted in the red band. So here we're sure that 
+p1 <- ggRGB(lan1995area, 1, 2, 3, stretch="hist") + ggtitle("1995") + theme(plot.title = element_text(hjust = 0.5))
+p2 <- ggRGB(lan2015area, 1, 2, 3, stretch="hist") + ggtitle("2015") + theme(plot.title = element_text(hjust = 0.5))
+p3 <- ggRGB(lan2022area, 1, 2, 3, stretch="hist") + ggtitle("2022") + theme(plot.title = element_text(hjust = 0.5))
+
+p1+p2+p3
+
+
+
+##### 5 - SPECTRAL INDICES #####
+
+# Calculation of DVI (Difference Vegetation Index).
+# DVI is calculated subtracting the red band from the NIR band. When plants have good health, they reflect highly the infrared
+# light (the NIR band). When they are stressed or dead, they reflect a lot less. In portions of the image clear from vegetation,
+# DVI is of course low. So, knowing this, if we have a satellite image we can check the changes in vegetation cover in a
+# particular area.
+
+## DVI 1995 
+dvi1995 = lan1995area[[1]] - lan1995area[[2]]
+dvi1995
+
+# Plot of the image to check the values of DVI using a personalized color palette.
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+plot(dvi1995, col=cl)
+
+## DVI 2015 
+dvi2015 = lan2015area[[1]] - lan2015area[[2]]
+plot(dvi2015, col=cl)
+
+## Comparison between DVI values in the 2 images. 
+par(mfrow=c(2,1))
+plot(dvi1995, col=cl)
+plot(dvi2015, col=cl)
+
+## Difference from 1995 to 2015.
+dvi_dif_1995_2015 = dvi1995 - dvi2015 ## ?? 1995-2015 OR 2015-1995 ???
+cld <- colorRampPalette(c('blue','white','red'))(100)
+plot(dvi_dif_1995_2015, col=cld)
+
+ # Plotting of the images of 1995 and 2015 with the red representing the NIR reflectance, together with the plot of the difference
+# in DVI from 1995 to 2015. we can clearly see from the last plot each portion of the area where the vegetation cover increased
+# in the 20 years between 1995 and 2015. The red areas, where the subtraction of NIR in 1995 from NIR in 2015 is above 0, DVI 
+# indicates that the vegetation cover has increased. Instead, the blue areas are those where subtraction between NIR from 1995
+# and from 2015 is below 0, indicating a decrease in vegetation.
+
+par(mfrow=c(3,1))
+plotRGB(lan1995area, 1, 2, 3, stretch="hist")
+plotRGB(lan2015area, 1, 2, 3, stretch="hist")
+plot(dvi_dif_1995_2015, col=cld)
+
+# Now I'll check also the DVI between 2015 until today, 7 years later. The process and calculations are the same.
+dvi2022 = lan2022area[[1]] - lan2022area[[2]]
+plot(dvi2022, col=cl)
+dvi_dif_2015_2022 = dvi2022 - dvi2015
+plot(dvi_dif_2015_2022, col=cld)
+
+par(mfrow=c(2,1))
+plot(dvi_dif_1995_2015, col=cld)
+plot(dvi_dif_2015_2022, col=cld)
+
+dvi_dif_1995_2022 <- dvi2022 - dvi1995
+plot(dvi_dif_1995_2022, col=cld)
+
+par(mfrow=c(2,1))
+plot(dvi_dif_1995_2015, col=cld)
+plot(dvi_dif_1995_2022, col=cld)
+
+
+# NDVI (Normalized Difference Vegetation Index)
+ndvi1995 = dvi1995 / (lan1995area[[1]] + lan1995area[[2]])
+plot(ndvi1995, col=cl)
+
+ndvi2015 = dvi2015 / (lan2015area[[1]] + lan2015area[[2]])
+plot(ndvi2015, col=cl)
+
+ndvi2022 = dvi2022 / (lan2022area[[1]] + lan2022area[[2]])
+plot(ndvi2022, col=cl)
+
+
+si1995 <- spectralIndices(lan1995area, green=3, red=2, nir=1)
+plot(si1995, col=cl)
+
+
+
+lan1995c <- unsuperClass(lan1995sq, nClasses = 2)
+plot(lan1995c$map)
+dev.off()
+
+
+
+
+
+
