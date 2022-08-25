@@ -5,6 +5,10 @@ setwd("C:/lab/")
 
 l1992 <- brick("defor1_.jpg") # carichiamo un'immagine già elaborata del Landsat
 l1992
+# Nelle caratteristiche dell'immagine importata i valori vanno da 0 a 255 perchè è un'immagine a 8 bit (2^8 = 256, non conta lo 0).
+# Usando immagini a 8 bit si riduce il "peso" dell'immagine satellitare nella memoria del computer dato che i dati dei pixel non sono più quelli della riflettanza
+# originaria (che poteva essere qualsiasi valore "reale" di riflettanza) ma vengono convertiti in matrici di dati di tipo booleano (ripetizioni di 0 o 1). Per 
+# tornare ad avere i dati originari si usano i metadati, che attraverso la descrizione del dato con particolari formule, restituiscono il valore del dato reale.
 
 plotRGB(l1992, r=1, g=2, b=3, stretch="lin")
 # visualizziamo la foresta del Rio Peixoto con l'infrarosso nel rosso (NIR in r)
@@ -26,8 +30,17 @@ plotRGB(l1992, r=1, g=2, b=3, stretch="lin") # costruiamo multiframe di due imma
 plotRGB(l2006, r=1, g=2, b=3, stretch="lin")
 
 # DVI (Difference Vegetation Index)
+# Il DVI è un indice che si calcola sottraendo la banda del rosso alla banda del NIR. In seguito deve essere normalizzato a NDVI per renderlo confrontabile con altri
+# valori dello stesso indice.
+# Nelle piante sane il NIR è riflesso molto e il rosso è assorbito quasi tutto dalle cellule a palizzata del mesofillo foliare (solitamente in posizione verticale
+# di massima riflettanza, una accanto all'altra). Quando la pianta è stressata o sta morendo, il mesofillo collassa e le sue cellule si dispongono obliquamente,
+# riflettendo di meno l'infrarosso e assorbendo meno rosso. Nelle rispettive bande quindi, una pianta sana rifletterà più infrarosso e meno rosso (perchè viene 
+# assorbito) mentre una pianta sotto stress o morta rifletterà meno infrarosso e più rosso. Passando da una pianta sana a una sttressata/morta, i valori di riflettanza
+# nell'infrarosso diminuiscono, mentre quelli nel rosso aumentano. 
+# Su immagini satellitari dello stesso posto in anni differenti si può quindi vedere come variano questi indici per ogni pixel dell'immagine, calcolando i due indici
+# e confrontando le loro variazioni.
 
-dvi1992 = l1992[[1]] - l1992[[2]]
+dvi1992 = l1992[[1]] - l1992[[2]] # banda dell'infrarosso (in questo caso è [[1]] perchè l'immagine ce l'ha plottata nella prima banda) meno banda del rosso [[2]] 
 dvi1992
 
 cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
@@ -48,7 +61,12 @@ plot(dvi_dif, col=cld)
 # l'indice si basa sulla salute delle piante, che riflettono diversamente l'infrarosso a seconda delle loro condizioni di salute
 
 
-# 31/03/2022
+# 31/03/2022 NDVI
+
+
+# L'NDVI è un indice grafico che misura la "salute" della vegetazione. Si calcola nel seguente modo: NDVI = (NIR - red) / (NIR + red), ovvero dividendo il DVI per
+# la somma dell'infrarosso più il rosso (NIR + red).
+
 
 # Range DVI (immagine a 8 bit): - 255 a 255
 # Range DVI (8 bit): -1 a 1
