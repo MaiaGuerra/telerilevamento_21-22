@@ -7,6 +7,7 @@ setwd("C:/lab/") # definiamo la cartella di lavoro
 lan2011 <- brick("p224r63_2011.grd") # assegniamo a un oggetto che decidiamo noi la funzione brick che crea un oggetto RasterBrick
 # il nome dell'immagine indica il codice con cui si identificano le immagini landsat
 # Durante la sua orbita il satellite acquisisce immagini (NON foto!) attraverso dei sensori che fanno una sorta di scanner alla superficie terrestre.
+# Landsat passa sullo stesso punto della superficie terrestre ogni 14 giorni.
 # Il satellite scannerizza seguendo i meridiani del pianeta (orbita circolare), e una volta riportati i percorsi (circolari) su una mappa, questi appaiono come delle
 # sinusoidi. Questi percorsi vengono chiamati "path", e vengono numerati. Essi sono ulteriormente divisi da righe orizzontali che seguono il senso dei paralleli,
 # dette "row".
@@ -22,24 +23,38 @@ lan2011
 ## ncell= n° di pixel (dati di riflettanza uno accanto all'altro)
 ## nlayers = n° di layer (bande) -> ogni banda ha 4 milioni circa di pixel! -> 4x7 = 28, abbiamo circa 30 milioni di dati!
 # resolution (risoluzione): 30, 30 (x, y) indica a quanto corrisponde ogni immagine nella realtà (30m x 30m)
-# extent
+# extent (estensione): riporta i valori di estensione dell'immagine
 # crs (coordinate reference system): +proj=utm +zone=22 + datum=WGS84 +units=m +no_defs
 # source (sorgente): p224r63.grd
 # names: B1_sre, B2_sre, B3_sre, B4_sre, B5_sre, B6_sre, B7_sre (nomi delle bande, sre = spectral reflectance, bt = banda termica)
 ## banda del blu = banda 1 = B1_sre
-## RIFLETTANZA = quanto flusso radiante entra / quanto flusso radiante viene riflesso
+## RIFLETTANZA = quanto flusso radiante entra / quanto flusso radiante viene riflesso (radiazione riflessa/radiazione incidente)
 ## riflettanza = 0, tutta la radiazione viene assorbita, niente viene riflesso
 ## riflettanza = 1, tutta la radiazione viene riflessa, niente viene assorbito
 ## non sempre i valori vanno da 0 a 1, a volte vanno anche da 0 a 255
-# min values: sono sempre tutti 0 tranne banda del termico
-# max values:
+# min values: valori min di riflettanza di ogni banda, sono sempre tutti 0 tranne banda del termico
+# max values: valori max di riflettanza di ogni banda
 
 plot(lan2011) # plottiamo per costruire l'immagine dal dato .grd
+# Il plot di R ha una scala di colori un po' brutta ma abbastanza buona per rappresentare i dati in modo leggibile anche dai daltonici.
+# La legenda alla destra di ogni grafico rappresenta la riflettanza di quella banda o dell'immagine, con vari valori.
+# Ad esempio nella prima banda (B1, quella del blu) la riflettanza ha valori molto bassi perchè l'immagine è quasi tutta di color arancione/rosa chiaro
+# che nella legenda corrisponde a valori intorno al 0,02 (la legenda va da 0 a 0,10. Nelle altre due bande successive i valori restano comunque bassi, 
+# mentre nella banda del NIR (B4) la riflettanza ha già dei valori più alti essendo tendente al verde, corrispondente a valori tra 0,3 e 0,4.
+# Nell'infrarosso medio (B5) la riflettanza è minore rispetto a quello vicino ma comunque buona, nel termico (B6) più o meno la stessa situazione e infine
+# nella banda 7 (B7, sempre infrarosso vicino ma un po' spostato) è abbastanza bassa.
+# Dato che l'immagine è sempre la stessa ma vista in diverse bande con diverse riflettanze, questo significa che ogni pixel ha valori diversi di riflettanza
+# in ogni banda.
 
-cl <- colorRampPalette(c("black", "grey", "light grey")) (100) # con questa funzione definiamo una nuova palette di colori per la legenda delle immagini restituite dal plot e la assegniamo a un oggetto
+cl <- colorRampPalette(c("black", "grey", "light grey")) (100) # con questa funzione definiamo una nuova palette di colori per la legenda delle immagini 
+# restituite dal plot e la assegniamo a un oggetto (cl). Il (100) alla fine della funzione definisce il numero di passaggi graduali di sfumatura da un colore
+# all'altro tra quelli che abbiamo definito (es. in questo caso per passare da "black" a "grey" usa 100 sfumature intermedie tra i due colori e così via anche
+# per tutti gli altri).
 plot(lan2011, col=cl) # riplottiamo con la nuova palette di colori
 
-# 11.03.2022 ripasso su sistemi di riferimento
+
+# 11.03.2022 ripasso su sistemi di riferimento (vedi appunti quaderno)
+
 
 # 18.03.2022
 
@@ -104,7 +119,8 @@ plot(lan2011$B4_sre, col=clnir)
 library(raster)
 setwd("C:/lab/")
 
-l2011 <- brick("p224r63_2011.grd") # p = path, r = row, p224 = path 224 (percorso fatto dal satellite attorno alla Terra), r63 = riga 63 (incrociando riga e path (colonna) individuiamo l'immagine di riferimento)
+l2011 <- brick("p224r63_2011.grd") # p = path, r = row, p224 = path 224 (percorso fatto dal satellite attorno alla Terra), r63 = riga 63 
+# (incrociando riga e path (colonna) individuiamo l'immagine di riferimento)
 
 # plottare immagine l2011 nella banda dell'infrarosso vicino (NIR)
 
@@ -126,16 +142,19 @@ plotRGB(l2011, r=3, g=2, b=1, stretch="lin") # plotta immagini satellitari fatte
 # visualizziamo un'immagine detta "a colori naturali"
 # ha una parte in cui non sono stati registrati valori (parte simile a dendriti neri/blu scuro)
 
-plotRGB(l2011, r=4, g=3, b=2, stretch="lin") # per inserire la banda dell'infrarosso nell'immagine manteniamo la banda 2 e 3 e sostituiamo all'argomento r (banda del rosso) il numero 4 che definisce la banda dell'infrarosso vicino
+plotRGB(l2011, r=4, g=3, b=2, stretch="lin") # per inserire la banda dell'infrarosso nell'immagine manteniamo la banda 2 e 3 e sostituiamo 
+# all'argomento r (banda del rosso) il numero 4 che definisce la banda dell'infrarosso vicino
 # attenzione a inserire i nuovi valori numerici (2, 3 e 4) facendo "scorrere" i numeri precedenti
 
 # spostiamo l'infrarosso dalla componente red alla green
 plotRGB(l2011, r=3, g=4, b=2, stretch="lin")
 # così facendo vediamo la banda dell'infrarosso colorata di verde
 
-plotRGB(l2011, r=3, g=2, b=4, stretch="lin") # plottando l'infrarosso nella banda del blu (si fa mettendo il 4 nell'oggetto b che è la banda del blu) si notano meglio le zone di suolo nudo (giallognole)
+plotRGB(l2011, r=3, g=2, b=4, stretch="lin") # plottando l'infrarosso nella banda del blu (si fa mettendo il 4 nell'oggetto b che è la banda del blu) 
+# si notano meglio le zone di suolo nudo (giallognole)
 
-plotRGB(l2011, r=3, g=4, b=2, stretch="hist") # specificando "hist" come stretch e mettendo l'infrarosso nel verde si notano meglio le zonazioni della foresta e le differenze nella vegetazione (viola = giallo di prima, ovvero suolo nudo)
+plotRGB(l2011, r=3, g=4, b=2, stretch="hist") # specificando "hist" come stretch e mettendo l'infrarosso nel verde si notano meglio le zonazioni della
+# foresta e le differenze nella vegetazione (viola = giallo di prima, ovvero suolo nudo)
 # come si sceglie dove mettere l'infrarosso? non c'è uno schema ideale, si sceglie quale delle combinazioni restituisce meglio i dettagli che ci servono
 
 # multiframe = insieme di più immagni
