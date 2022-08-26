@@ -457,7 +457,7 @@ forestpix2015 <- 61238 # 2015
 forestpix2022 <- 56345 # 2022
 
 
-### Calculation of the percentage of forest cover in the 3 years ###
+### 6.3 Calculation of the percentage of forest cover in the 3 years ###
 
 ## 1995
 perc_forest_1995 <- (forestpix1995/totpix)*100
@@ -470,3 +470,26 @@ perc_forest_2015 # The percentage of forest cover in 2015 is 26.57899 ~ 26,6%
 ## 2022
 perc_forest_2022 <- (forestpix2022/totpix)*100
 perc_forest_2022 # The percentage of forest cover in 2022 is 24.4553 ~ 24,5%
+
+
+### 6.4 Final plot of the changing of forest cover ###
+
+# From this last analysis we can see how the forest cover has changed during the years. In the first 20 years from 1995 to 2015 it has decreased
+# of 1,4%, while from 2015 to 2022 it has decreased of 2,1%. Let's do a plot to better see this decrease through the years.
+
+# Building of the dataframe. 
+year <- c("1995", "2015", "2022")
+forest_cover <- c(28, 26.6, 24.5)
+forest_cover_df <- data.frame(year, forest_cover)
+
+# Creation of the plot and final export.
+jpeg(filename="Forest cover decrease from 1995 to 2022.jpg", width=1000, height=600)
+plot(forest_cover_df, main="Forest cover decrease from 1995 to 2022", xlab="Year", ylab="Forest cover %", pch=16, 
+     cex=1.5, cex.main=1.5, cex.lab=1.5)
+grid(nx = NA, ny = NULL, lty = 2, col = "gray", lwd = 2)
+axis(1, at = year, labels = year)
+lines(year, forest_cover, col = "red", lty = 1, lwd = 2)
+dev.off()
+
+# From this last plot we can see that the trend of forest cover change is negative: it has decreased quite fast in the first 20 years of the
+# analysis, and even faster in the last 7 years.
