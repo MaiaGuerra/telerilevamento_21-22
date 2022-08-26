@@ -1,0 +1,56 @@
+\documentclass[]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\usetheme{Berkeley} % definisce il tema della presentazione (design)
+\usecolortheme{spruce} % definisce il colore del tema 
+
+\title{Yellowstone from wolf reintroduction until today}
+\author{Maia Guerra}
+\date{29 August 2022}
+
+\begin{document}
+
+\maketitle
+% inseriamo un indice (outline) in una slide che ci indichi prima di ogni sezione a che punto della presetazione siamo con \AtBeginSection[]{}
+    \AtBeginSection[] % Do nothing for \section*
+    {	
+    \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+    \end{frame}
+    }
+
+\section{Introduction}
+
+ \begin{frame}{Context and code presentation}
+    Many articles have been published from wolf reintroduction in \textbf{Yellowstone National Park} (YNP) until now, talking about vegetation recovery after their reintroduction (Beschta and Ripple, 2016), but also about land cover changes in this area in the last years (Potter, 2019). \\
+    Other sources, like the official \href{https://www.globalforestwatch.org/}{global forest watch website}, report a forest cover loss during the years from 2001 to 2021, showing a decrease in it. \\
+    With my code I wanted to check this changes in land cover, with special regard to vegetation, in the area of Yellowstone National Park from wolf reintroduction, on 12th January 1995, until now, 2022.
+    
+ \end{frame}
+
+\section{Images sources and searching criteria}
+
+ \subsection{Image sources}
+   \begin{frame}{Image source: USGS website}
+    The years I selected for the analysis are 1995, 2015 and 2022. The images of of 2015 and 2022 come from Landsat 8-9 OLI/TIRS, while images of 1995 come from Landsat 4-5 TM, both from landsat 2 - collection 2. The source of the images is USGS EarthExplorer website.
+   \end{frame}
+
+ \subsection{Searching Criteria}
+   \begin{frame}{Searching Criteria}
+    Searching criteria started from determining the coordinates of the study area (Figure \ref{Fig:1}).
+    \begin{figure}
+    \centering % per centrare l'immagine
+    \includegraphics[width=0.8\textwidth]{Image_USGS_1.png} % inserisce l'immagine con una larghezza che definiamo rispetto al testo con \textwidth
+    \caption{1} % inseriamo una didascalia
+    \label{Fig:1} % definiamo un'etichetta per richiamare l'immagine
+\end{figure}
+   \end{frame}
+
+\section{Analysis}
+ \subsection{Time Series Analysis}
+ \subsection{Spectral Indices}
+ \subsection{Land Cover}
+\end{document}
