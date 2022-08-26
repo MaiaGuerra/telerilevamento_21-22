@@ -343,7 +343,6 @@ plotRGB(lan2015area, 1, 2, 3, stretch="hist", axes=T, main="2015", cex.main=1.5)
 plot(dvi_dif_1995_2015, main = "Difference in DVI from 1995 to 2015", cex.main=1.5,
     legend.args = list(text = "     Veget.\n     loss", line = 1, cex=1), col=cld)
 
-
 # Now I'll check also the DVI between 2015 until today, 7 years later. The process and calculations are the same.
 dvi2022 = lan2022area[[1]] - lan2022area[[2]]
 plot(dvi2022, col=cl)
@@ -372,12 +371,13 @@ plot(dvi_dif_1995_2015, main = "Difference in DVI from 1995 to 2015", cex.main=1
 plot(dvi_dif_2015_2022, main = "Difference in DVI from 2015 to 2022", cex.main=1.5,
      legend.args = list(text = "      Vegetation \n      loss", line = 1, cex=1.1), col=cld)
 
-# Difference in DVI from 1995 to 2022.
+# Difference in DVI from 1995 to 2022 with final image export.
 dvi_dif_1995_2022 <- dvi1995 - dvi2022
 jpeg(filename="DVI difference from 1995 to 2022.jpg", width = 800, height = 800)
 plot(dvi_dif_1995_2022, main = "Difference in DVI from 1995 to 2022", cex.main=1.5,
      legend.args = list(text = "      Vegetation \n      loss", line = 1, cex=1.1),col=cld)
 dev.off()
+
 # Comparison between intervals from 1995 to 2015 and from 1995 to 2022.
 par(mfrow=c(2,1))
 plot(dvi_dif_1995_2015, col=cld)
@@ -410,40 +410,63 @@ plot(ndvi2015, main = "2015", cex.main=2, legend.args = list(text = "NDVI", line
 plot(ndvi2022, main = "2022", cex.main=2, legend.args = list(text = "NDVI", line = 1, cex=1), col=cl)
 dev.off()
 
-si1995 <- spectralIndices(lan1995area, green=3, red=2, nir=1)
-plot(si1995, col=cl)
+
+
 
 
 ###### 6 - LAND COVER #####
 
 
 # To calculate the land cover I need to work just on one layer. Since my images are made of more than one, I need to "build" this 
-# layer using the code and starting from the layers of each image. To do so, I decided to use Principal Component Analysis results,
-# in particular the first component, which is the most informative about the land cover of the images.
-# The calculation uses the number of pixels that correspond to vegetation (that is to say, that reflect highly on the NIR band).
-# To count them, I used function freq on the images made in the previous section using the PC1 component. This function counts the 
-# number of pixels for each value of reflectance of the image. After that, to identify the range of pixels correspondent to 
+# layer using the code and starting from the layers of each image. To do so, I decided to apply unsuperClass function on the raster
+# images created from DVI analysis, that distinguished better the levels of reflectance in the images. This allowed me to identify
+# the vegetation: in a satellite raster image that shows DVI, vegetation correspond to the pixels with the highest values. So, using
+# 3 classes for the clustering of this image with unsuperClass, I am able to group all of them out of the total pixels of the image,
+# considering only the class with the highest value. This is possible by using freq function on the map of the model created by
+# unsupeClass. Finally, to calculate the land cover change, I made a ratio between the pixels corresponding to vegetation and the total
+# number of pixels for each image.
 
 
+### 6.1 Creation of the model with unsuperClass ###
+
+##1995
 l1995uc <- unsuperClass(dvi1995, nClasses = 3)
 plot(l1995uc$map)
 
+## 2015
 l2015uc <- unsuperClass(dvi2015, nClasses = 3)
 plot(l2015uc$map)
 
+## 2022
 l2022uc <- unsuperClass(dvi2022, nClasses = 3)
 plot(l2022uc$map)
 
-freq(l1995uc$map) # class 2 (vegetation) = 1st run: 62785, 2nd: 64339, 3rd: 64339
-freq(l2015uc$map) # class 1 (vegetation) = 1st: 61238, 2nd: 61238, 3rd: 59870
-freq(l2022uc$map) # class 1 (vegetation) = 1st: 60177, 2nd: 56345, 3rd: 57953
+
+### 6.2 Calculation of the total amount of pixels for each class in the 3 images ###
+
+freq(l1995uc$map) # class 2 (vegetation) = 64339
+freq(l2015uc$map) # class 1 (vegetation) = 61238
+freq(l2022uc$map) # class 3 (vegetation) = 56345
+
+# Total pixel of each image
+totpix <- 230400
+
+# Total forest pixels of the 3 images.
+forestpix1995 <- 64339 # 1995
+forestpix2015 <- 61238 # 2015
+forestpix2022 <- 56345 # 2022
 
 
-l1995_2015uc <- unsuperClass(dvi_dif_1995_2015, nClasses = 3)
-plot(l1995_2015uc$map)
-freq(l1995_2015uc$map)
+### Calculation of the percentage of forest cover in the 3 years ###
 
-l2015_2022uc <- unsuperClass(dvi_dif_2015_2022, nClasses = 3)
-plot(l2015_2022uc$map)
-freq(l2015_2022uc$map)
+## 1995
+perc_forest_1995 <- (forestpix1995/totpix)*100
+perc_forest_1995 # The percentage of forest cover in 1995 is 27.92491 ~ 27,92 ~ 28%
 
+## 2015
+perc_forest_2015 <- (forestpix2015/totpix)*100
+perc_forest_2015 # The percentage of forest cover in 2015 is 26.57899 ~ 26,6%
+
+## 2022
+perc_forest_2022 <- (forestpix2022/totpix)*100
+perc_forest_2022 # The percentage of forest cover in 2022 is 24.4553 ~ 24,5%
