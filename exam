@@ -331,9 +331,9 @@ dev.off()
 
 # Plotting of the images of 1995 and 2015 with the red colour representing the NIR reflectance, together with the plot of the 
 # difference in DVI from 1995 to 2015. We can clearly see from the last plot each portion of the area where the vegetation cover 
-# increased or decreased in the 20 years between 1995 and 2015. The red areas, where the subtraction of NIR in 1995 from NIR in 2015 
-# is above 0, DVI indicates that the vegetation cover has decreased. Instead, the blue areas are those where subtraction of NIR values 
-# in 2015 from NIR values in 1995 is below 0, indicating an increase in vegetation. White areas are =0, representing portions of the 
+# increased or decreased in the 20 years between 1995 and 2015. The red areas, where the subtraction of DVI in 1995 from DVI in 2015 
+# is above 0, represent areas where the vegetation cover has decreased. Instead, the blue areas are those where subtraction of DVI values 
+# in 2015 from DVI values in 1995 is below 0, indicating an increase in vegetation. White areas are =0, representing portions of the 
 # image with no vegetation cover (e.g. the lake) or portions where it didn't change a lot, being the difference in DVI during the years
 # equal to 0. 
 
