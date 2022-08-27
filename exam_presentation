@@ -1,10 +1,11 @@
-\documentclass[]{beamer}
+\documentclass[8pt]{beamer} % setting document class and font size
 \usepackage[utf8]{inputenc}
-\usepackage{listings}
-\usepackage{color}
-\usepackage{hyperref}
-\usetheme{Berkeley} % definisce il tema della presentazione (design)
-\usecolortheme{spruce} % definisce il colore del tema 
+\usepackage{listings} % for r code import
+\usepackage{color} % for colors
+\usepackage{hyperref} % for references between objects inside the presentation
+\usepackage{moresize} % for extra font sizes
+\usetheme{Berkeley} % presentation main theme
+\usecolortheme{spruce} % theme color 
 
 \title{Yellowstone from wolf reintroduction until today}
 \author{Maia Guerra}
@@ -13,8 +14,8 @@
 \begin{document}
 
 \maketitle
-% inseriamo un indice (outline) in una slide che ci indichi prima di ogni sezione a che punto della presetazione siamo con \AtBeginSection[]{}
-    \AtBeginSection[] % Do nothing for \section*
+% Outline.
+    \AtBeginSection[]
     {	
     \begin{frame}
     \frametitle{Outline}
@@ -22,35 +23,265 @@
     \end{frame}
     }
 
+
+% Begin of the presentation code.
 \section{Introduction}
 
- \begin{frame}{Context and code presentation}
+ \begin{frame}{Introduction}
     Many articles have been published from wolf reintroduction in \textbf{Yellowstone National Park} (YNP) until now, talking about vegetation recovery after their reintroduction (Beschta and Ripple, 2016), but also about land cover changes in this area in the last years (Potter, 2019). \\
     Other sources, like the official \href{https://www.globalforestwatch.org/}{global forest watch website}, report a forest cover loss during the years from 2001 to 2021, showing a decrease in it. \\
     With my code I wanted to check this changes in land cover, with special regard to vegetation, in the area of Yellowstone National Park from wolf reintroduction, on 12th January 1995, until now, 2022.
-    
  \end{frame}
+
+
 
 \section{Images sources and searching criteria}
 
- \subsection{Image sources}
+
+ \subsection{Image source}
+ 
    \begin{frame}{Image source: USGS website}
-    The years I selected for the analysis are 1995, 2015 and 2022. The images of of 2015 and 2022 come from Landsat 8-9 OLI/TIRS, while images of 1995 come from Landsat 4-5 TM, both from landsat 2 - collection 2. The source of the images is USGS EarthExplorer website.
+   \begin{itemize}
+       \item Years selected for the analysis: 1995, 2015 and 2022.
+       \item Images of 2015 and 2022 come from Landsat 8-9 OLI/TIRS, while images of 1995 come from Landsat 4-5 TM, both from Landsat 2 - Collection 2.
+       \item The source of the images is USGS EarthExplorer website.
+   \end{itemize}
    \end{frame}
 
  \subsection{Searching Criteria}
+ 
    \begin{frame}{Searching Criteria}
-    Searching criteria started from determining the coordinates of the study area (Figure \ref{Fig:1}).
-    \begin{figure}
-    \centering % per centrare l'immagine
-    \includegraphics[width=0.8\textwidth]{Image_USGS_1.png} % inserisce l'immagine con una larghezza che definiamo rispetto al testo con \textwidth
-    \caption{1} % inseriamo una didascalia
-    \label{Fig:1} % definiamo un'etichetta per richiamare l'immagine
-\end{figure}
+   \begin{itemize}
+       \item Searching criteria started from determining the coordinates of the study area (Figure \ref{Fig:1}).
+   \end{itemize}
+      \begin{figure}
+      \centering 
+      \includegraphics[width=0.9\textwidth]{Image_USGS_1.png}
+      \caption{1} 
+      \label{Fig:1}
+      \end{figure}
+   \end{frame}
+  
+  \begin{frame}{Searching Criteria}
+    \begin{itemize}
+       \item The datasets selected were those from Landsat 2 - Collection 2 mentioned in the Image source section.
+       \item Images selected for each year during the summer period, from the last half of July until the end of August, to better check vegetation situation.
+       \item Additional criteria: cloud cover rate from min 0 to max 50.
+       \item The dates of selection were due to the images quality, which sometimes had too high percentage of cloud cover and could not be selected for the analysis of this work.
+       \item Selected images then cut to be centered on the study area, using the code.
+    \end{itemize}
    \end{frame}
 
+
+
+\section{Preparation of data}
+
+
+\subsection{Data import}
+
+   \begin{frame}{Data import code}
+    \begin{itemize}
+        \item With this type of code line I imported all the bands from the 3 images I've selected in the 3 years. Library used are raster, RStoolbox, ggplot2, patchwork and viridis.
+    \end{itemize}
+    \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Data_import_code.r}}
+   \end{frame}
+
+
+\subsection{Cutting of the images}
+
+   \begin{frame}{Cutting of the images}
+   \begin{itemize}
+       \item After the first import of the images, they looked as showed in the figure below (Figure \ref{Fig:2}).
+   \end{itemize}
+      \begin{figure}
+      \centering 
+      \includegraphics[width=0.9\textwidth]{first_images_import.jpeg}
+      \caption{2} 
+      \label{Fig:2}
+      \end{figure}
+   \begin{itemize}
+        \item This is because the area scanned by the satellite is much wider than the study area I've selected. So, to visualize it better, the images need to be cut. I did this passage using the code as well. 
+   \end{itemize}
+   \end{frame}
+   
+   \begin{frame}{Cutting of the images}
+   \begin{itemize}
+       \item To cut the images I've used function drawExtent() function from raster package,
+       to select a square around it, using the cursor on the plot of the 1995 image. The square had georeferenced coordinates at its vertexes, so it could be applied also to the other 2 images from 2015 and 2022. 
+       \item After this operation I've applied the cut on the 3 images using function crop and I've obtained 3 images centered on exactly the same area. Finally I've plotted all the images with the NIR band in the red band, using plotRGB() function. 
+   \end{itemize}
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Cutting_images_code.r}}
+   \end{frame}
+   
+   \begin{frame}{Cutting of the images}
+   \begin{itemize}
+       \item The images were finally exported using jpeg() function, that saves them with the first 3 bands. Afterwards, they were re-imported in the environment to use them in all the further analysis of this work. Their appearance with the NIR band in the red band is the one showed below in Figure \ref{Fig:3}, with all the vegetation in red color.
+   \end{itemize}
+   \begin{figure}
+       \centering
+       \includegraphics[width=0.9\textwidth]{Satellite_images_1995_2015_2022.jpg}
+       \caption{3}
+       \label{Fig:3}
+   \end{figure}
+   \end{frame}
+
+
+   
 \section{Analysis}
+
+
  \subsection{Time Series Analysis}
+ 
+  \begin{frame}{Time Series Analysis}
+  \begin{itemize}
+      \item The first analysis of this code is the time series. I've created it putting the images from each year one beside the other, as showed in the code below.
+      \item Functions and packages used: ggplot for the plots, patchwork package for the building of the time series, ggsave to export and save the final image.
+  \end{itemize}
+  \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Time_series_ggplot.r}}
+  \end{frame}
+
+   \begin{frame}{Time Series Analysis}
+   \begin{itemize}
+        \item The resulting image of the time series is the figure below (Figure \ref{Fig:4}).
+        \item The NIR is still plotted in the red band to highlight better the vegetation and its changes.
+   \end{itemize}
+   \begin{figure}
+       \centering
+       \includegraphics[width=0.9\textwidth]{Time_series_analysis_with_highlighted_NIR.jpg}
+       \caption{4}
+       \label{Fig:4}
+   \end{figure}
+   \end{frame}
+
+   \begin{frame}{Time Series Analysis}
+   \begin{itemize}
+       \item To make the time series changes perceivable also to colorblind people I made one also using viridis package scales for colors, with option "inferno".
+       \item The code to apply viridis includes a PCA that is used to reduce each image from 3 layers to a single one, without loosing too much information. Then, for the time series, only the first component is chose from each model, being the one that represents better all the information of the images, condensed in one layer.
+       \item In the code below, the process is showed only for the image from 1995.
+   \end{itemize}
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Time_series_viridis.r}}
+   \end{frame}
+
+   \begin{frame}{Time Series Analysis}
+   \begin{itemize}
+       \item The final output of this time series is Figure \ref{Fig:5}.
+   \end{itemize}
+   \begin{figure}
+       \centering
+       \includegraphics[width=1\textwidth]{Time_series_analysis_with_viridis.jpg}
+       \caption{5}
+       \label{Fig:5}
+   \end{figure}
+   \end{frame}
+
+
  \subsection{Spectral Indices}
+ 
+   \begin{frame}{Spectral Indices}
+   \begin{itemize}
+       \item The two indices I decided to calculate are based on vegetation: DVI (Difference Vegetation Index) and NDVI (Normalized Difference Vegetation Index).
+       \item DVI is an absolute index that quantifies vegetation by measuring the difference between NIR (Near-InfraRed), which vegetation strongly reflects and red light, which vegetation absorbs. It is calculated by the following formula:
+       \begin{equation}
+           DVI = NIR - red
+       \end{equation}
+       \item NDVI is the normalized version of the index, thus becoming a relative index, and possible to compare between images. The formula for this index is as follows:
+       \begin{equation}
+           NDVI = \frac{NIR - red}{NIR + red}
+       \end{equation}
+       \item In the code, the DVI was calculated in the two lines below, in separate sections. Here is showed only for the first image as an example.
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{DVI_NDVI.r}}   
+   \end{itemize}
+   \end{frame}
+   
+   \begin{frame}{DVI}
+   \begin{itemize}
+       \item After this calculations the DVI was plotted as an image, but, as previously said, being an absolute index makes its values not suitable for comparison.
+       \item To check changes in vegetation, DVI has been used instead to visualize the spacial decrease or increase in vegetation through the years.
+       \item This was made by subtracting DVI values between images from 1995 and 2015, from 2015 and 2022, and from 1995 and 2022. 
+       \item In the final plot (Figure \ref{Fig:6}), the red areas represent portions of the image where the vegetation cover has decreased through the years. Instead, the blue areas are those where there was an increase in vegetation. White areas represent portions of the image with no vegetation cover (e.g. the lake) or portions where DVI didn't change a lot. The calculation and plot of the DVI difference was made in the following way for each image.
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{DVI_difference_and_plot.r}}
+   \end{itemize}
+   \end{frame}
+
+   \begin{frame}{DVI}
+       \begin{figure}
+           \centering
+           \includegraphics[width=0.34\textwidth]{DVI difference from 1995 to 2015.jpg}
+           \includegraphics[width=0.34\textwidth]{DVI difference from 2015 to 2022.jpg}
+           \includegraphics[width=0.34\textwidth]{DVI difference from 1995 to 2022.jpg}
+           \caption{6}
+           \label{Fig:6}
+       \end{figure}
+   \end{frame}
+
+   \begin{frame}{NDVI}
+   \begin{itemize}
+       \item NDVI is the normalized form of DVI, with values that range always between -1 and 1. For this reason, it can be compared between images, as I did in the plot and export of the code and plot showing here below and in Figure \ref{Fig:7}.
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{NDVI_comparison.r}}
+   \end{itemize}
+   \end{frame}
+   
+   \begin{frame}{NDVI}
+   \begin{figure}
+       \centering
+       \includegraphics[width=1\textwidth]{NDVI_from_1995_to_2022.jpeg}
+       \caption{7}
+       \label{Fig:7}
+   \end{figure}
+   \end{frame}
+
+
  \subsection{Land Cover}
+ 
+   \begin{frame}{Land Cover}
+   \begin{itemize}
+       \item The last analysis of my code is a land cover analysis. I was interested in vegetation, so to calculate forest cover I needed to calculate the pixels corresponding to vegetation in each image and then make a proportion to have the percentage of forest cover for each analysed year.
+       \item To do this, I needed a one layer image, so I decided to use the images I already produced from the DVI analysis. These were already one layer images, having also the values of DVI, which permitted to distinguish better the vegetation (corresponding to the portions having the higher values), and indicated clearly by the colors of the image.
+       \item unsuperClass function was used for the classification of the pixels, setting 3 classes, which seemed to be better to distinguish the vegetation. freq function was used to count pixels for each class and finally, after finding the class corresponding to forest, the proportion was made. Here's a code example on 1995 image.
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Land_cover.r}}
+   \end{itemize}
+   \end{frame}
+
+   \begin{frame}{Land Cover}
+   \begin{itemize}
+       \item The same calculations were made for all the 3 images. The results came up to be:
+       \\
+       28\% of forest cover in 1995;\\
+       26,6\% of forest cover in 2015;\\
+       24,5\% of forest cover in 2022.
+       \item To visualize this data I made a graph (Figure \ref{Fig:8}) with the following code.
+   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Forest_cover_plot.r}}
+   \end{itemize}
+   \end{frame}
+   \begin{frame}{Forest Cover Plot}
+       \begin{figure}
+           \centering
+           \includegraphics[width=1\textwidth]{Forest_cover_decrease_from_1995_to_2022.jpg}
+           \caption{8}
+           \label{Fig:8}
+       \end{figure}
+   \end{frame}
+
+
+
+\section{Conclusion}
+
+   \begin{frame}{Conclusion}
+   \begin{itemize}
+       \item From this last graph the trend of forest cover seems to be negative, showing a decrease in forest cover of 1,4\% in the 20 years between 1995 and 2015, and even a faster decrease of 2,1\% in these last 7 years from 2015 to 2022.
+       \item Vegetation indices show in some areas a higher value in the years 2015 and 2022, thus possibly indicating an increase in the sizes of trees or leaves area of trees, as suggest Beschta and Ripple's (2016).
+       \item Some conclusions could be that, starting from wolf reintroduction, the forest started to recover thanks to the trophic cascade effects that followed, but this recover was made by the trees more by growing in size or height, rather than widening their distribution area over the park.
+       \item This could demonstrate that a decrease in forest cover does not mean necessarily deforestation. Forest cover loss includes change in both natural and planted forest, and does not need to be human caused.
+       \item  Also, some articles report that some changes in forest cover over the last 20 years in Yellowstone area have a correlation with wildfires (Potter, 2019).
+       \item Again, this do not exclude human caused deforestation to possibly occur at a certain level in Yellowstone National Park. 
+       \item Note finally that the analysis done in this little project has a really small base of data, causing it to have probably a high bias on the information deducted from them. Anyway, it seems to confirm generally the findings of other real studies made recently on the same area.
+   \end{itemize}
+   \end{frame}
+   \begin{frame}{Conclusion}
+       \centering Thanks for the attention!
+       \begin{figure}
+           \centering
+           \includegraphics[width=1\textwidth]{Wolf_ending.jpg}
+       \end{figure}
+   \end{frame}
 \end{document}
