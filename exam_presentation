@@ -106,16 +106,16 @@
    
    \begin{frame}{Cutting of the images}
    \begin{itemize}
-       \item To cut the images I've used function drawExtent() function from raster package,
+       \item To cut the images I've used drawExtent() function from raster package,
        to select a square around it, using the cursor on the plot of the 1995 image. The square had georeferenced coordinates at its vertexes, so it could be applied also to the other 2 images from 2015 and 2022. 
-       \item After this operation I've applied the cut on the 3 images using function crop and I've obtained 3 images centered on exactly the same area. Finally I've plotted all the images with the NIR band in the red band, using plotRGB() function. 
+       \item After this operation I've applied the cut on the 3 images using  crop() function and I've obtained 3 images centered on exactly the same area. Finally, I've plotted all the images with the NIR band in the red band, using plotRGB() function. 
    \end{itemize}
    \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Cutting_images_code.r}}
    \end{frame}
    
    \begin{frame}{Cutting of the images}
    \begin{itemize}
-       \item The images were finally exported using jpeg() function, that saves them with the first 3 bands. Afterwards, they were re-imported in the environment to use them in all the further analysis of this work. Their appearance with the NIR band in the red band is the one showed below in Figure \ref{Fig:3}, with all the vegetation in red color.
+       \item The images were finally exported using jpeg() function, that saves them with the first 3 bands. Afterwards, they were re-imported in the environment to use them in all the analysis of this work. Their appearance with the NIR band in the red band is the one showed below in Figure \ref{Fig:3}, with all the vegetation in red color.
    \end{itemize}
    \begin{figure}
        \centering
@@ -135,7 +135,7 @@
   \begin{frame}{Time Series Analysis}
   \begin{itemize}
       \item The first analysis of this code is the time series. I've created it putting the images from each year one beside the other, as showed in the code below.
-      \item Functions and packages used: ggplot for the plots, patchwork package for the building of the time series, ggsave to export and save the final image.
+      \item Functions and packages used: ggplot() for the plots, patchwork package for the building of the time series, ggsave() to export and save the final image.
   \end{itemize}
   \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Time_series_ggplot.r}}
   \end{frame}
@@ -143,7 +143,7 @@
    \begin{frame}{Time Series Analysis}
    \begin{itemize}
         \item The resulting image of the time series is the figure below (Figure \ref{Fig:4}).
-        \item The NIR is still plotted in the red band to highlight better the vegetation and its changes.
+        \item The NIR is still plotted in the red band to highlight better the vegetation and its changes through the years.
    \end{itemize}
    \begin{figure}
        \centering
@@ -155,7 +155,7 @@
 
    \begin{frame}{Time Series Analysis}
    \begin{itemize}
-       \item To make the time series changes perceivable also to colorblind people I made one also using viridis package scales for colors, with option "inferno".
+       \item To make the time series changes perceivable also to colorblind people, I made another one using viridis package scales for colors, with option "inferno".
        \item The code to apply viridis includes a PCA that is used to reduce each image from 3 layers to a single one, without loosing too much information. Then, for the time series, only the first component is chose from each model, being the one that represents better all the information of the images, condensed in one layer.
        \item In the code below, the process is showed only for the image from 1995.
    \end{itemize}
@@ -179,12 +179,12 @@
  
    \begin{frame}{Spectral Indices}
    \begin{itemize}
-       \item The two indices I decided to calculate are based on vegetation: DVI (Difference Vegetation Index) and NDVI (Normalized Difference Vegetation Index).
-       \item DVI is an absolute index that quantifies vegetation by measuring the difference between NIR (Near-InfraRed), which vegetation strongly reflects and red light, which vegetation absorbs. It is calculated by the following formula:
+       \item The two indices I decided to calculate are based on vegetation: \textbf{DVI (Difference Vegetation Index)} and \textbf{NDVI (Normalized Difference Vegetation Index)}.
+       \item DVI is an absolute index that quantifies vegetation by measuring the difference between NIR (Near-InfraRed), which vegetation strongly reflects, and red light, which vegetation absorbs. It is calculated by the following formula:
        \begin{equation}
            DVI = NIR - red
        \end{equation}
-       \item NDVI is the normalized version of the index, thus becoming a relative index, and possible to compare between images. The formula for this index is as follows:
+       \item NDVI is the normalized version of the index, a relative index, and it's possible to compare between images. The formula for this index is as follows:
        \begin{equation}
            NDVI = \frac{NIR - red}{NIR + red}
        \end{equation}
@@ -195,10 +195,10 @@
    
    \begin{frame}{DVI}
    \begin{itemize}
-       \item After this calculations the DVI was plotted as an image, but, as previously said, being an absolute index makes its values not suitable for comparison.
-       \item To check changes in vegetation, DVI has been used instead to visualize the spacial decrease or increase in vegetation through the years.
+       \item After this calculations the DVI was plotted as an image, but, as previously said, as an absolute index its values are not suitable for comparison.
+       \item To check changes in vegetation, DVI has been used instead to visualize the spacial decrease or increase in vegetation throughout the years.
        \item This was made by subtracting DVI values between images from 1995 and 2015, from 2015 and 2022, and from 1995 and 2022. 
-       \item In the final plot (Figure \ref{Fig:6}), the red areas represent portions of the image where the vegetation cover has decreased through the years. Instead, the blue areas are those where there was an increase in vegetation. White areas represent portions of the image with no vegetation cover (e.g. the lake) or portions where DVI didn't change a lot. The calculation and plot of the DVI difference was made in the following way for each image.
+       \item In the final plot (Figure \ref{Fig:6}), the red areas represent portions of the image where the vegetation cover has decreased throughout the years. Instead, the blue areas are those where there was an increase in vegetation. White areas represent portions of the image with no vegetation cover (e.g. the lake) or portions where DVI didn't change a lot. The calculation and plot of the DVI difference was made in the following way for each image.
    \ssmall \textcolor{teal}{\lstinputlisting[language = R]{DVI_difference_and_plot.r}}
    \end{itemize}
    \end{frame}
@@ -216,7 +216,7 @@
 
    \begin{frame}{NDVI}
    \begin{itemize}
-       \item NDVI is the normalized form of DVI, with values that range always between -1 and 1. For this reason, it can be compared between images, as I did in the plot and export of the code and plot showing here below and in Figure \ref{Fig:7}.
+       \item NDVI is the normalized form of DVI, with values that range always between -1 and 1. For this reason, it can be compared between images, as I did in the plot and export of the code showing here below and in Figure \ref{Fig:7}.
    \ssmall \textcolor{teal}{\lstinputlisting[language = R]{NDVI_comparison.r}}
    \end{itemize}
    \end{frame}
@@ -235,9 +235,9 @@
  
    \begin{frame}{Land Cover}
    \begin{itemize}
-       \item The last analysis of my code is a land cover analysis. I was interested in vegetation, so to calculate forest cover I needed to calculate the pixels corresponding to vegetation in each image and then make a proportion to have the percentage of forest cover for each analysed year.
-       \item To do this, I needed a one layer image, so I decided to use the images I already produced from the DVI analysis. These were already one layer images, having also the values of DVI, which permitted to distinguish better the vegetation (corresponding to the portions having the higher values), and indicated clearly by the colors of the image.
-       \item unsuperClass function was used for the classification of the pixels, setting 3 classes, which seemed to be better to distinguish the vegetation. freq function was used to count pixels for each class and finally, after finding the class corresponding to forest, the proportion was made. Here's a code example on 1995 image.
+       \item The last analysis of my code is a land cover analysis. I was interested in vegetation, so to calculate forest cover I needed to calculate the pixels corresponding to vegetation in each image and then make a proportion to have the percentage of forest cover for each analysed image.
+       \item To do this, I needed a one layer image, so I decided to use the images I already produced from the DVI analysis. These were already one layer images, having also the values of DVI, which permitted to distinguish better the vegetation (corresponding to the portions having the higher values), indicated clearly by the colors of the image.
+       \item unsuperClass() function was used for the classification of the pixels, setting 3 classes, which seemed to be the better way to distinguish vegetation. freq() function was used to count pixels for each class and finally, after finding the class corresponding to forest, the proportion was made. Here's a code example on 1995 image.
    \ssmall \textcolor{teal}{\lstinputlisting[language = R]{Land_cover.r}}
    \end{itemize}
    \end{frame}
@@ -269,7 +269,7 @@
    \begin{frame}{Conclusion}
    \begin{itemize}
        \item From this last graph the trend of forest cover seems to be negative, showing a decrease in forest cover of 1,4\% in the 20 years between 1995 and 2015, and even a faster decrease of 2,1\% in these last 7 years from 2015 to 2022.
-       \item Vegetation indices show in some areas a higher value in the years 2015 and 2022, thus possibly indicating an increase in the sizes of trees or leaves area of trees, as suggest Beschta and Ripple's (2016).
+       \item Vegetation indices show in some areas a higher value in the years 2015 and 2022, compared to values in 1995, thus possibly indicating an increase in the sizes of trees or leaves area of trees, as suggest Beschta and Ripple's (2016).
        \item Some conclusions could be that, starting from wolf reintroduction, the forest started to recover thanks to the trophic cascade effects that followed, but this recover was made by the trees more by growing in size or height, rather than widening their distribution area over the park.
        \item This could demonstrate that a decrease in forest cover does not mean necessarily deforestation. Forest cover loss includes change in both natural and planted forest, and does not need to be human caused.
        \item  Also, some articles report that some changes in forest cover over the last 20 years in Yellowstone area have a correlation with wildfires (Potter, 2019).
