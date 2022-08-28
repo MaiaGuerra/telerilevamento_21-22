@@ -225,8 +225,6 @@ lan2022area <- brick("lan2022area.jpg")
 plotRGB(lan2022area, 1, 2, 3, stretch="hist")
 
 
-
-
 ## PART II: data analysis ----------------------------------------------------------------------------------------------------------
 
 
@@ -330,12 +328,12 @@ plot(dvi_dif_1995_2015, main = "Difference in DVI from 1995 to 2015", cex.main=1
 dev.off()
 
 # Plotting of the images of 1995 and 2015 with the red colour representing the NIR reflectance, together with the plot of the 
-# difference in DVI from 1995 to 2015. We can clearly see from the last plot each portion of the area where the vegetation cover 
-# increased or decreased in the 20 years between 1995 and 2015. The red areas, where the subtraction of DVI in 1995 from DVI in 2015 
-# is above 0, represent areas where the vegetation cover has decreased. Instead, the blue areas are those where subtraction of DVI values 
-# in 2015 from DVI values in 1995 is below 0, indicating an increase in vegetation. White areas are =0, representing portions of the 
-# image with no vegetation cover (e.g. the lake) or portions where it didn't change a lot, being the difference in DVI during the years
-# equal to 0. 
+# difference in DVI from 1995 to 2015. We can clearly see from the last plot each portion of the area where the values of DVI have
+# increased or decreased in the 20 years between 1995 and 2015. In the red areas, the subtraction of DVI in 1995 from DVI in 2015 
+# is above 0, so DVI values have decreased in those areas during the years. Instead, the blue areas are those where subtraction
+# is below 0, indicating an increase in DVI values throughout the years. White areas are =0, representing 
+# portions of the image with no vegetation cover (e.g. the lake) or portions where DVI didn't change a lot, being the difference 
+# in the values equal to 0. 
 
 par(mfrow=c(1,3))
 plotRGB(lan1995area, 1, 2, 3, stretch="hist", axes=T, main="1995", cex.main=1.5)
@@ -357,12 +355,12 @@ dev.off()
 # Here I compare the two intervals calculated with DVI, the first from 1995 to 2015 and the second from 2015 to 2022. 
 # DVI is an absolute index so it's not comparable between different images, as we can see here having different values for the
 # same color between the two legends of the images. Nevertheless, for this part of my analysis, this characteristic of the index 
-# does not matter, because I want to check only the spatial decrease or increase in vegetation visually from the plots. 
-# In the following plots of this code we can see that in the 20 years from 1995 to 2015 the vegetation cover has both increased and
-# decreased widely in quite all the area of Yellowstone. On the contrary, in the last 7 years from 2015 to 2022, the vegetation has
-# increased in spots inside the area, and mostly in the northeastern part of it, in blue color; it has decreased in some other spots 
-# too, but mostly in the one at the left part of the image, in red color, while the rest of the image remains white, indicating a 
-# low change in vegetation cover in those areas.
+# does not matter, because I want to check only the spatial decrease or increase in DVI values visually from the plots. 
+# In the following plots of this code we can see that in the 20 years from 1995 to 2015 the DVI values has both increased and
+# decreased widely in quite all the area of Yellowstone. On the contrary, in the last 7 years from 2015 to 2022, the DVI has
+# increased in spots inside the area, and mostly in the northeastern part of it, in blue color; also, it has decreased in some other  
+# spots, but mostly in the one at the left part of the image, in red color, while the rest of the image remains white, indicating a 
+# low change in DVI in those areas.
 
 # Comparison between intervals from 1995 to 2015 and from 2015 to 2022. Export of the image included.
 par(mfrow=c(1,2))
@@ -431,15 +429,15 @@ dev.off()
 
 ##1995
 l1995uc <- unsuperClass(dvi1995, nClasses = 3)
-plot(l1995uc$map)
+plot(l1995uc$map, main="1995")
 
 ## 2015
 l2015uc <- unsuperClass(dvi2015, nClasses = 3)
-plot(l2015uc$map)
+plot(l2015uc$map, main="2015")
 
 ## 2022
 l2022uc <- unsuperClass(dvi2022, nClasses = 3)
-plot(l2022uc$map)
+plot(l2022uc$map, main="2022")
 
 
 ### 6.2 Calculation of the total amount of pixels for each class in the 3 images ###
@@ -470,6 +468,12 @@ perc_forest_2015 # The percentage of forest cover in 2015 is 26.57899 ~ 26,6%
 ## 2022
 perc_forest_2022 <- (forestpix2022/totpix)*100
 perc_forest_2022 # The percentage of forest cover in 2022 is 24.4553 ~ 24,5%
+
+# Calculation of the decrease in forest cover.
+decrease1995_2015 <- 28-26.6
+decrease1995_2015
+decrease2015_2022 <- 26.6-24.5
+decrease2015_2022
 
 
 ### 6.4 Final plot of the changing of forest cover ###
